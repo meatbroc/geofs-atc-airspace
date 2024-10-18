@@ -14,32 +14,46 @@
   let spotCoordinates1;
   let spotCoordinates2;
 
-  let airportName = "KSFO";
-
   let center = { lat: 41.536558, lng: -8.627487 };
-  let radius = 25;
 
   // checkIfInside(spotCoordinates1);
   // checkIfInside(spotCoordinates2);
 
-  function checkIfInside(spotCoordinates) {
+  let radius = 25;
+  let airportName = 'KSFO';
+  
+  function checkUser(spotCoordinates, callsign) {
     let newRadius = distanceInKmBetweenEarthCoordinates(
       spotCoordinates[0],
       spotCoordinates[1],
       geofs.mainAirportList[airportName][0],
       geofs.mainAirportList[airportName][1],
     );
-    console.log(newRadius);
+    console.log(`${spotCoordinates[0]} ${spotCoordinates[0]}`)
 
     if (newRadius < radius) {
       //point is inside the circle
-      console.log("inside");
+      return true
+      console.log(`${callsign} is in`)
     } else if (newRadius > radius) {
       //point is outside the circle
-      console.log("outside");
+      return false
     } else {
       //point is on the circle
-      console.log("on the circle");
+      return true
+      console.log(`${callsign} is in`)
+    }
+  }
+  let usersIn = [];
+  // next is to find out when new users enter your airspace or something else idk
+  function radiusCheck() {
+    for (const [key, value] of Object.entries(multiplayer.users)) {
+      if (value.lastUpdate.co) {
+        if (checkUser(value.lastUpdate.co, value.lastUpdate.cs)) {
+          console.log(value.lastUpdate.cs)
+          usersIn.push(value.lastUpdate.cs)
+        }
+      }
     }
   }
 
