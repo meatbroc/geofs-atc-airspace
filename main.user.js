@@ -14,8 +14,6 @@
   let spotCoordinates1;
   let spotCoordinates2;
 
-  let center = { lat: 41.536558, lng: -8.627487 };
-
   // checkIfInside(spotCoordinates1);
   // checkIfInside(spotCoordinates2);
 
@@ -44,14 +42,14 @@
       console.log(`${callsign} is in`)
     }
   }
-  let usersIn = [];
+  let usersIn1 = [];
   // next is to find out when new users enter your airspace or something else idk
   function radiusCheck() {
     for (const [key, value] of Object.entries(multiplayer.users)) {
       if (value.lastUpdate.co) {
         if (checkUser(value.lastUpdate.co, value.lastUpdate.cs)) {
-          console.log(value.lastUpdate.cs)
-          usersIn.push(value.lastUpdate.cs)
+          
+          usersIn1.push(value.lastUpdate.cs)
         }
       }
     }
