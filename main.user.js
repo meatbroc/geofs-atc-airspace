@@ -20,41 +20,64 @@
   let radius = 25;
   let airportName = 'KSFO';
   
-  function checkUser(spotCoordinates, callsign) {
+  function checkUser(spotCoordinates) {
     let newRadius = distanceInKmBetweenEarthCoordinates(
       spotCoordinates[0],
       spotCoordinates[1],
       geofs.mainAirportList[airportName][0],
       geofs.mainAirportList[airportName][1],
     );
-    console.log(`${spotCoordinates[0]} ${spotCoordinates[0]}`)
+    // console.log(`${spotCoordinates[0]} ${spotCoordinates[0]}`)
 
     if (newRadius < radius) {
       //point is inside the circle
       return true
-      console.log(`${callsign} is in`)
+      // console.log(`${callsign} is in`)
     } else if (newRadius > radius) {
       //point is outside the circle
       return false
     } else {
       //point is on the circle
       return true
-      console.log(`${callsign} is in`)
+      // console.log(`${callsign} is in`)
     }
   }
-  let usersIn1 = [];
+  let usersIn = [];
   // next is to find out when new users enter your airspace or something else idk
-  function radiusCheck() {
-    for (const [key, value] of Object.entries(multiplayer.users)) {
+  function radiusCheck(multiplayerObject) {
+    usersIn = [];
+    for (const [key, value] of Object.entries(multiplayerObject)) {
       if (value.lastUpdate.co) {
         if (checkUser(value.lastUpdate.co, value.lastUpdate.cs)) {
-          
-          usersIn1.push(value.lastUpdate.cs)
+          // console.log(key)
+          // usersIn.push(value.lastUpdate.cs)
+          usersIn.push(key);
         }
       }
     }
+    return usersIn;
   }
-
+  let stillIn = [];
+  function recheck(a) {
+    stillIn = [];
+    a.forEach((element) => {
+      if (checkUser(multiplayer.users[element].lastUpdate.co)) {
+        stillIn.push(element);
+      }
+    })
+  }
+  
+  async function performRadiusCheck() {
+    try {
+      const result = await radiusCheck(multiplayer.users);
+      console.log('Radius check successful:', result);
+      // Call another function after radiusCheck
+      recheck(result);
+    } catch (error) {
+      console.error('Radius check failed:', error);
+    }
+  }
+  
   function distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
     var earthRadiusKm = 6371;
 
