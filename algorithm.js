@@ -134,6 +134,8 @@
         }
     }
 // -----------------------------------------------------------------
+let radius = 25;
+let airportName = 'PHNL';
 function checkUser(spotCoordinates) {
     let newRadius = distanceInKmBetweenEarthCoordinates(
         spotCoordinates[0],
@@ -206,7 +208,7 @@ Array.prototype.equals = function (array) {
 }
 // Hide method from for-in loops
 Object.defineProperty(Array.prototype, "equals", { enumerable: false });
-function check (mObj)
+function check (mObj) {
     let internalArr = [];
     for (const [key, value] of Object.entries(mObj)) {
         if (value.lastUpdate.co) {
@@ -230,19 +232,19 @@ let b;
 function action () {
     console.log('skibidi')
 }
-function airspace.init() {
+airspace.init = function () {
     a = check(multiplayer.users)
     b = check(multiplayer.users)
-    function c () => {
+    function c () {
         if (!a.equals(b)) {
             action()
         }
         a = b;
         b = check(multiplayer.users)
     }
-    airspace.interval = setInterval(c, 1000)
+    airspace.interval = setInterval(c, 200)
 }
-function airspace.stop() {
+airspace.stop = function () {
     clearInterval(airspace.interval);
     a = undefined;
     b = undefined;
