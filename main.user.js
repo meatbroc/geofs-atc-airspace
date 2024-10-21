@@ -328,7 +328,7 @@ radiuscheck -> sets usersin1 to usersin2 and then sets usersin2
 compare
 ok so basically i dont really need recheck just radius check twice and go based off a counter
     let radius = 25;
-    let airportName = 'KSFO';
+    let airportName = 'PHNL';
 
     function checkUser(spotCoordinates) {
         let newRadius = distanceInKmBetweenEarthCoordinates(
@@ -430,10 +430,15 @@ ok so basically i dont really need recheck just radius check twice and go based 
             usersIn1 = usersIn2;
             for (const [key, value] of Object.entries(multiplayerObject)) {
                 if (value.lastUpdate.co) {
-                    if (checkUser(value.lastUpdate.co, value.lastUpdate.cs)) {
-                        // console.log(key)
-                        // usersIn.push(value.lastUpdate.cs)
-                        usersIn2.push(key);
+                    try {
+                        if (checkUser(value.lastUpdate.co, value.lastUpdate.cs)) {
+                            // console.log(key)
+                            // usersIn.push(value.lastUpdate.cs)
+                            usersIn2.push(key);
+                        }
+                    }
+                    catch (error) {
+                        console.log("Key:" + key + "Value:" + value)
                     }
                 }
             }
@@ -443,6 +448,8 @@ ok so basically i dont really need recheck just radius check twice and go based 
             checkResult = 'started'; 
         } else if (usersIn1.equals(usersIn2)) {
             checkResult = 'same';
+        } else if (!usersIn1.equals(usersIn2)) {
+            checkResult = 'different'
         }
         return checkResult;
     }
