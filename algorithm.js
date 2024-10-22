@@ -211,26 +211,27 @@ Object.defineProperty(Array.prototype, "equals", { enumerable: false });
 function check (mObj) {
     let internalArr = [];
     for (const [key, value] of Object.entries(mObj)) {
-        if (value.lastUpdate.co) {
-            try {
+        try {
+            if (value.lastUpdate.co) {
                 if (checkUser(value.lastUpdate.co, value.lastUpdate.cs)) {
                     // console.log(key)
                     // usersIn.push(value.lastUpdate.cs)
                     internalArr.push(key);
                 }
             }
-            catch (error) {
-                console.log("Key:" + key + "Value:" + value)
-            }
+        }
+        catch (error) {
+            console.log("Key:" + key + "Value:" + value)
         }
     }
-    return internalArr;
+    return internalArr;    
 }
 let airspace = {};
 let a;
 let b;
 function action () {
-    console.log('skibidi')
+    console.log(a)
+    console.log(b)
 }
 airspace.init = function () {
     a = check(multiplayer.users)
