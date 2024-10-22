@@ -229,11 +229,11 @@ function check (mObj) {
 let airspace = {};
 let a;
 let b;
-new Audio(.)
+let sonarSound = new Audio('https://raw.githubusercontent.com/meatbroc/geofs-atc-airspace/main/sonar.mp3');
 function action () {
-    console.log(a)
-    console.log(b)
-    
+    console.log(a);
+    console.log(b);
+    sonarSound.play();
 }
 airspace.init = function () {
     a = check(multiplayer.users)
