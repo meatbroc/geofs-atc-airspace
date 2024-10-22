@@ -229,9 +229,11 @@ function check (mObj) {
 let airspace = {};
 let a;
 let b;
+new Audio(.)
 function action () {
     console.log(a)
     console.log(b)
+    
 }
 airspace.init = function () {
     a = check(multiplayer.users)
