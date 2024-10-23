@@ -1,5 +1,4 @@
-// -----------------------------------------------------------------
-let radius = 25;
+let radius = 15;
 let airportName = 'PHNL';
 function checkUser(spotCoordinates) {
     let newRadius = distanceInKmBetweenEarthCoordinates(
