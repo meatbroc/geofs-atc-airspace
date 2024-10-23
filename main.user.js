@@ -320,16 +320,89 @@
 
 // multiplayer.visibleUsers
 // console.trace()
+const style = document.createElement("style");
+style.innerHTML = `
+    .ext-autopilot-pad {
+        width: 90px;
+        margin: 0px 10px;
+    }
+    .ext-control-pad {
+        border: 1px solid #888;
+        background-color: #000;
+        box-shadow: 0px 0px 5px #000;
+        border-radius: 15px;
+        cursor: pointer !important;
+    }
+    .ext-autopilot-controls {
+        vertical-align: bottom;
+        display: none;
+        margin-right: 10px;
+    }
+    .ext-autopilot-control {
+        position: relative;
+        text-align: center;
+        margin: 0px 5px;
+        color: white;
+        line-height: 25px;
+        display: inline-block;
+    }
+    .ext-autopilot-switchRight {
+        position: relative;
+        text-align: center;
+        margin: 0px 5px;
+        color: white;
+        display: inline-block;
+        user-select: none;
+        -webkit-user-select: none;
+        width: 35px;
+        height: 17px;
+        line-height: 19px;
+        cursor: pointer;
+        color: white;
+        background: #000;
+        margin: 2px 0px;
+        border-radius: 0px 15px 15px 0px;
+        box-shadow: 0px 0px 5px #000;
+    }
+    .ext-autopilot-bar {
+        opacity: 0.5;
+        margin-top: 5px;
+        white-space: nowrap;
+        display: flex;
+        align-items: flex-start;
+        pointer-events: all;
+    }
+`;
+document.head.appendChild(style);
 const controlButton = document.createElement("div");
-controlButton.innerHTML = `<div class="geofs-autopilot-bar">
-                <div class="control-pad geofs-autopilot-pad" id="0.35219131053109255" tabindex="0">
-                    <div class="control-pad-label transp-pad">AUTOPILOT</div>
-            </div>`;
+controlButton.classList.add('ext-autopilot-bar')
+controlButton.innerHTML = `
+                <div class="ext-control-pad ext-autopilot-pad" id="atc-button" tabindex="0">
+                    <div class="control-pad-label transp-pad">ATC</div>
+                    `;
 const container = document.getElementsByClassName("geofs-ui-top");
 container[0].appendChild(controlButton);
+const controlElmnt = document.createElement("div");
+controlElmnt.classList.add('ext-autopilot-controls');
+controlElmnt.style.display = 'none';
+controlElmnt.innerHTML = `
+                    <div class="ext-autopilot-control">
+                        <span class="geofs-autopilot-switch geofs-autopilot-mode">
+                            <a class="switchLeft geofs-autopilot-HDG green-pad" data-method="setMode" value="HDG">HDG</a><a class="switchRight geofs-autopilot-NAV" data-method="setMode" value="NAV">NAV</a>
+                        </span>
+                    </div>
+`
+const container2 = document.getElementsByClassName("ext-autopilot-bar");
+container2[0].appendChild(controlElmnt);
 document
-    .getElementById("0.35219131053109255")
+    .getElementById("atc-button")
     .addEventListener("click", function () {
         const autopilotState = this.classList.toggle("active");
-        alert("Autopilot is now " + (autopilotState ? "ON" : "OFF"));
+        if (this.classList.contains('active')) {
+            controlElmnt.style.display = 'block';
+        } else {
+            controlElmnt.style.display = 'none';
+        }
+        console.log(this.classList)
+        console.log(this)
     });
