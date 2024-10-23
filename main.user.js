@@ -110,6 +110,7 @@
         console.log(a);
         console.log(b);
         sonarSound.play();
+        ui.notification.show('someone entered ur airspace')
     }
     airspace.init = function () {
         a = check(multiplayer.users);
