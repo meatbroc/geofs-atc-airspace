@@ -346,14 +346,20 @@ style.innerHTML = `
         line-height: 25px;
         display: inline-block;
     }
-    .ext-autopilot-switchRight {
-        position: relative;
+    .ext-autopilot-control span {
+        display: block;
         text-align: center;
-        margin: 0px 5px;
-        color: white;
-        display: inline-block;
+        text-shadow: #000 1px 1px 3px;
+        font-size: 12px;
+    }
+    .ext-autopilot-bar .ext-autopilot-switch .ext-switchRight {
+        border-radius: 0px 15px 15px 0px;
+    }
+    .geofs-autopilot-bar .geofs-autopilot-switch a {
         user-select: none;
         -webkit-user-select: none;
+        position: relative;
+        display: inline-block;
         width: 35px;
         height: 17px;
         line-height: 19px;
@@ -361,7 +367,8 @@ style.innerHTML = `
         color: white;
         background: #000;
         margin: 2px 0px;
-        border-radius: 0px 15px 15px 0px;
+        display: inline-block;
+        border: 1px solid white;
         box-shadow: 0px 0px 5px #000;
     }
     .ext-autopilot-bar {
@@ -388,7 +395,8 @@ controlElmnt.style.display = 'none';
 controlElmnt.innerHTML = `
                     <div class="ext-autopilot-control">
                         <span class="geofs-autopilot-switch geofs-autopilot-mode">
-                            <a class="switchLeft geofs-autopilot-HDG green-pad" data-method="setMode" value="HDG">HDG</a><a class="switchRight geofs-autopilot-NAV" data-method="setMode" value="NAV">NAV</a>
+                            <a class="switchLeft geofs-autopilot-HDG green-pad" data-method="setMode" value="HDG">RDR</a>
+                            <a class="switchRight geofs-autopilot-NAV" data-method="setMode" value="NAV">VIS</a>
                         </span>
                     </div>
 `
