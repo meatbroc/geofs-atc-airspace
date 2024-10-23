@@ -11,125 +11,123 @@
 // ==/UserScript==
 
 (function () {
-let radius = 25;
-let airportName = 'PHNL';
-function checkUser(spotCoordinates) {
-    let newRadius = distanceInKmBetweenEarthCoordinates(
-        spotCoordinates[0],
-        spotCoordinates[1],
-        geofs.mainAirportList[airportName][0],
-        geofs.mainAirportList[airportName][1],
-    );
-    // console.log(`${spotCoordinates[0]} ${spotCoordinates[0]}`)
+    let radius = 15;
+    let airportName = "PHNL";
+    function checkUser(spotCoordinates) {
+        let newRadius = distanceInKmBetweenEarthCoordinates(
+            spotCoordinates[0],
+            spotCoordinates[1],
+            geofs.mainAirportList[airportName][0],
+            geofs.mainAirportList[airportName][1],
+        );
+        // console.log(`${spotCoordinates[0]} ${spotCoordinates[0]}`)
 
-    if (newRadius < radius) {
-        //point is inside the circle
-        return true
-        // console.log(`${callsign} is in`)
-    } else if (newRadius > radius) {
-        //point is outside the circle
-        return false
-    } else {
-        //point is on the circle
-        return true
-        // console.log(`${callsign} is in`)
+        if (newRadius < radius) {
+            //point is inside the circle
+            return true;
+            // console.log(`${callsign} is in`)
+        } else if (newRadius > radius) {
+            //point is outside the circle
+            return false;
+        } else {
+            //point is on the circle
+            return true;
+            // console.log(`${callsign} is in`)
+        }
     }
-}
-function distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
-    var earthRadiusKm = 6371;
+    function distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
+        var earthRadiusKm = 6371;
 
-    var dLat = degreesToRadians(lat2 - lat1);
-    var dLon = degreesToRadians(lon2 - lon1);
+        var dLat = degreesToRadians(lat2 - lat1);
+        var dLon = degreesToRadians(lon2 - lon1);
 
-    lat1 = degreesToRadians(lat1);
-    lat2 = degreesToRadians(lat2);
+        lat1 = degreesToRadians(lat1);
+        lat2 = degreesToRadians(lat2);
 
-    var a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.sin(dLon / 2) *
+        var a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
             Math.sin(dLon / 2) *
-            Math.cos(lat1) *
-            Math.cos(lat2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return earthRadiusKm * c;
-}
+                Math.sin(dLon / 2) *
+                Math.cos(lat1) *
+                Math.cos(lat2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return earthRadiusKm * c;
+    }
 
-function degreesToRadians(degrees) {
-    return (degrees * Math.PI) / 180;
-}
-if (Array.prototype.equals)
-    console.warn("Overriding existing Array.prototype.equals. Possible causes: New API defines the method, there's a framework conflict or you've got double inclusions in your code.");
-// attach the .equals method to Array's prototype to call it on any array
-Array.prototype.equals = function (array) {
-    // if the other array is a falsy value, return
-    if (!array)
-        return false;
+    function degreesToRadians(degrees) {
+        return (degrees * Math.PI) / 180;
+    }
+    if (Array.prototype.equals)
+        console.warn(
+            "Overriding existing Array.prototype.equals. Possible causes: New API defines the method, there's a framework conflict or you've got double inclusions in your code.",
+        );
+    // attach the .equals method to Array's prototype to call it on any array
+    Array.prototype.equals = function (array) {
+        // if the other array is a falsy value, return
+        if (!array) return false;
         // if the argument is the same array, we can be sure the contents are same as well
-    if (array === this)
-        return true;
-        // compare lengths - can save a lot of time 
-    if (this.length != array.length)
-        return false;
+        if (array === this) return true;
+        // compare lengths - can save a lot of time
+        if (this.length != array.length) return false;
         for (var i = 0, l = this.length; i < l; i++) {
             // Check if we have nested arrays
             if (this[i] instanceof Array && array[i] instanceof Array) {
                 // recurse into the nested arrays
-                if (!this[i].equals(array[i]))
-                    return false;
-                } else if (this[i] != array[i]) {
+                if (!this[i].equals(array[i])) return false;
+            } else if (this[i] != array[i]) {
                 // Warning - two different object instances will never be equal: {x:20} != {x:20}
                 return false;
             }
         }
-    return true;
-}
-// Hide method from for-in loops
-Object.defineProperty(Array.prototype, "equals", { enumerable: false });
-function check (mObj) {
-    let internalArr = [];
-    for (const [key, value] of Object.entries(mObj)) {
-        try {
-            if (value.lastUpdate.co) {
-                if (checkUser(value.lastUpdate.co, value.lastUpdate.cs)) {
-                    // console.log(key)
-                    // usersIn.push(value.lastUpdate.cs)
-                    internalArr.push(key);
+        return true;
+    };
+    // Hide method from for-in loops
+    Object.defineProperty(Array.prototype, "equals", { enumerable: false });
+    function check(mObj) {
+        let internalArr = [];
+        for (const [key, value] of Object.entries(mObj)) {
+            try {
+                if (value.lastUpdate.co) {
+                    if (checkUser(value.lastUpdate.co, value.lastUpdate.cs)) {
+                        // console.log(key)
+                        // usersIn.push(value.lastUpdate.cs)
+                        internalArr.push(key);
+                    }
                 }
+            } catch (error) {
+                console.log("Key:" + key + "Value:" + value);
             }
         }
-        catch (error) {
-            console.log("Key:" + key + "Value:" + value)
-        }
+        return internalArr;
     }
-    return internalArr;    
-}
-let airspace = {};
-let a;
-let b;
-let sonarSound = new Audio('https://raw.githubusercontent.com/meatbroc/geofs-atc-airspace/main/sonar.mp3');
-function action () {
-    console.log(a);
-    console.log(b);
-    sonarSound.play();
-}
-airspace.init = function () {
-    a = check(multiplayer.users)
-    b = check(multiplayer.users)
-    function c () {
-        if (!a.equals(b)) {
-            action()
-        }
-        a = b;
-        b = check(multiplayer.users)
+    let airspace = {};
+    let a;
+    let b;
+    let sonarSound = new Audio(
+        "https://raw.githubusercontent.com/meatbroc/geofs-atc-airspace/main/sonar.mp3",
+    );
+    function action() {
+        console.log(a);
+        console.log(b);
+        sonarSound.play();
     }
-    airspace.interval = setInterval(c, 200)
-}
-airspace.stop = function () {
-    clearInterval(airspace.interval);
-    a = undefined;
-    b = undefined;
-}
-
+    airspace.init = function () {
+        a = check(multiplayer.users);
+        b = check(multiplayer.users);
+        function c() {
+            if (!a.equals(b)) {
+                action();
+            }
+            a = b;
+            b = check(multiplayer.users);
+        }
+        airspace.interval = setInterval(c, 200);
+    };
+    airspace.stop = function () {
+        clearInterval(airspace.interval);
+        a = undefined;
+        b = undefined;
+    };
     const style = document.createElement("style");
     style.innerHTML = `
       .atc-visible {
@@ -178,12 +176,12 @@ airspace.stop = function () {
     }
     function createBox(identifier) {
         const box = document.createElement("div");
-        box.style.position = 'absolute'
-        box.style.backgroundColor = 'white';
-        box.style.width = '180px';
-        box.style.height = '300px';
+        box.style.position = "absolute";
+        box.style.backgroundColor = "white";
+        box.style.width = "180px";
+        box.style.height = "300px";
         box.style.zIndex = 999; // Raise the z-index
-        box.classList.add('ext-toggle-panel');
+        box.classList.add("ext-toggle-panel");
         box.id = identifier; // Correct method to set the id
         return box;
     }
@@ -194,8 +192,8 @@ airspace.stop = function () {
         inputBox.style.left = "0px";
         inputBox.style.bottom = "0px";
         inputBox.id = identifier;
-        inputBox.classList.add('geofs-stopKeyboardPropagation');
-        inputBox.classList.add('geofs-stopKeyupPropagation');
+        inputBox.classList.add("geofs-stopKeyboardPropagation");
+        inputBox.classList.add("geofs-stopKeyupPropagation");
         return inputBox;
     }
 
@@ -206,31 +204,37 @@ airspace.stop = function () {
     let mode;
     function toVis() {
         mode = 0;
-        console.log(mode)
+        console.log(mode);
     }
     function toCoord() {
         mode = 1;
-        console.log(mode)
+        console.log(mode);
     }
     const submitAirport = function () {
-        if (document.getElementById('airport-input').value) {
-            userInput = document.getElementById('airport-input').value.toUpperCase();
+        if (document.getElementById("airport-input").value) {
+            userInput = document
+                .getElementById("airport-input")
+                .value.toUpperCase();
             if (geofs.mainAirportList[userInput]) {
                 airportName = userInput;
             } else {
                 ui.notification.show(`${userInput} is not a valid airport`);
             }
         }
-        document.getElementById('airport-input').value = null;
-    }
+        document.getElementById("airport-input").value = null;
+    };
 
     const atcToggler = createButton("ATC", toggleATC, "atc-toggle");
-    const atcPanel = createBox("atc-panel")
+    const atcPanel = createBox("atc-panel");
     const atcHeader = createHeader("atc-header");
-    const airportInput = createInput('airport-input');
-    const airportSubmit = createButton('SUBMIT', submitAirport, "airport-submit")
-    const visRadar = createButton('USE VISIBLE', toVis, "visible-radar")
-    const coordRadar = createButton('USE COORDS', toCoord, "coordinate-radar")
+    const airportInput = createInput("airport-input");
+    const airportSubmit = createButton(
+        "SUBMIT",
+        submitAirport,
+        "airport-submit",
+    );
+    const visRadar = createButton("USE VISIBLE", toVis, "visible-radar");
+    const coordRadar = createButton("USE COORDS", toCoord, "coordinate-radar");
 
     const container = document.querySelector(".geofs-ui-bottom");
 
@@ -244,7 +248,8 @@ airspace.stop = function () {
 
     const hoverMouse = () => {
         const atcHeader = document.getElementById("atc-header");
-        if (atcHeader) { // Check if the element exists
+        if (atcHeader) {
+            // Check if the element exists
             atcHeader.addEventListener("mouseover", (event) => {
                 // Change the cursor to grab on mouseover
                 event.target.style.cursor = "grab";
@@ -268,10 +273,14 @@ airspace.stop = function () {
     dragElement(document.getElementById("atc-panel"));
 
     function dragElement(elmnt) {
-        var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        var pos1 = 0,
+            pos2 = 0,
+            pos3 = 0,
+            pos4 = 0;
         if (document.getElementById(elmnt.id + "header")) {
             /* if present, the header is where you move the DIV from:*/
-            document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+            document.getElementById(elmnt.id + "header").onmousedown =
+                dragMouseDown;
         } else {
             /* otherwise, move the DIV from anywhere inside the DIV:*/
             elmnt.onmousedown = dragMouseDown;
@@ -297,8 +306,8 @@ airspace.stop = function () {
             pos3 = e.clientX;
             pos4 = e.clientY;
             // set the element's new position:
-            elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-            elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+            elmnt.style.top = elmnt.offsetTop - pos2 + "px";
+            elmnt.style.left = elmnt.offsetLeft - pos1 + "px";
         }
 
         function closeDragElement() {
@@ -311,152 +320,16 @@ airspace.stop = function () {
 
 // multiplayer.visibleUsers
 // console.trace()
-
-radiuscheck -> sets usersin1
-recheck -> sets usersin2
-compare
-loop
-
-or
-
-radiuscheck -> sets usersin1 when usersin2 is undefined
-recheck -> sets usersin2
-compare
-radiuscheck -> sets usersin1 to usersin2 and then sets usersin2
-compare
-ok so basically i dont really need recheck just radius check twice and go based off a counter
-    let radius = 25;
-    let airportName = 'PHNL';
-
-    function checkUser(spotCoordinates) {
-        let newRadius = distanceInKmBetweenEarthCoordinates(
-            spotCoordinates[0],
-            spotCoordinates[1],
-            geofs.mainAirportList[airportName][0],
-            geofs.mainAirportList[airportName][1],
-        );
-        // console.log(`${spotCoordinates[0]} ${spotCoordinates[0]}`)
-
-        if (newRadius < radius) {
-            //point is inside the circle
-            return true
-            // console.log(`${callsign} is in`)
-        } else if (newRadius > radius) {
-            //point is outside the circle
-            return false
-        } else {
-            //point is on the circle
-            return true
-            // console.log(`${callsign} is in`)
-        }
-    }
-    function distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
-        var earthRadiusKm = 6371;
-
-        var dLat = degreesToRadians(lat2 - lat1);
-        var dLon = degreesToRadians(lon2 - lon1);
-
-        lat1 = degreesToRadians(lat1);
-        lat2 = degreesToRadians(lat2);
-
-        var a =
-            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return earthRadiusKm * c;
-    }
-
-    function degreesToRadians(degrees) {
-        return (degrees * Math.PI) / 180;
-    }
-    if (Array.prototype.equals)
-        console.warn("Overriding existing Array.prototype.equals. Possible causes: New API defines the method, there's a framework conflict or you've got double inclusions in your code.");
-    // attach the .equals method to Array's prototype to call it on any array
-    Array.prototype.equals = function (array) {
-        // if the other array is a falsy value, return
-        if (!array)
-            return false;
-        // if the argument is the same array, we can be sure the contents are same as well
-        if (array === this)
-            return true;
-        // compare lengths - can save a lot of time 
-        if (this.length != array.length)
-            return false;
-
-        for (var i = 0, l = this.length; i < l; i++) {
-            // Check if we have nested arrays
-            if (this[i] instanceof Array && array[i] instanceof Array) {
-                // recurse into the nested arrays
-                if (!this[i].equals(array[i]))
-                    return false;
-            }
-            else if (this[i] != array[i]) {
-                // Warning - two different object instances will never be equal: {x:20} != {x:20}
-                return false;
-            }
-        }
-        return true;
-    }
-    // Hide method from for-in loops
-    Object.defineProperty(Array.prototype, "equals", { enumerable: false });
-    let usersIn1 = [];
-    let usersIn2 = [];
-    let checkResult;
-    // next is to find out when new users enter your airspace or something else idk
-    function radiusCheck(multiplayerObject) {
-        if (usersIn1[1] == undefined) {
-            for (const [key, value] of Object.entries(multiplayerObject)) {
-                if (value.lastUpdate.co) {
-                    if (checkUser(value.lastUpdate.co, value.lastUpdate.cs)) {
-                        // console.log(key)
-                        // usersIn.push(value.lastUpdate.cs)
-                        usersIn1.push(key);
-                    }
-                }
-            }
-        } else if ((usersIn2[1] == undefined)) {
-            for (const [key, value] of Object.entries(multiplayerObject)) {
-                if (value.lastUpdate.co) {
-                    if (checkUser(value.lastUpdate.co, value.lastUpdate.cs)) {
-                        // console.log(key)
-                        // usersIn.push(value.lastUpdate.cs)
-                        usersIn2.push(key);
-                    }
-                }
-            }
-        } else {
-            usersIn1 = usersIn2;
-            for (const [key, value] of Object.entries(multiplayerObject)) {
-                if (value.lastUpdate.co) {
-                    try {
-                        if (checkUser(value.lastUpdate.co, value.lastUpdate.cs)) {
-                            // console.log(key)
-                            // usersIn.push(value.lastUpdate.cs)
-                            usersIn2.push(key);
-                        }
-                    }
-                    catch (error) {
-                        console.log("Key:" + key + "Value:" + value)
-                    }
-                }
-            }
-        }
-        
-        if (usersIn2[1] == undefined) {
-            checkResult = 'started'; 
-        } else if (usersIn1.equals(usersIn2)) {
-            checkResult = 'same';
-        } else if (!usersIn1.equals(usersIn2)) {
-            checkResult = 'different'
-        }
-        return checkResult;
-    }
-    async function performRadiusCheck() {
-        try {
-            const result = await radiusCheck(multiplayer.users);
-            console.log('Radius check successful:', result);
-            // Call another function after radiusCheck
-        } catch (error) {
-            console.error('Radius check failed:', error);
-        }
-    }
+const controlButton = document.createElement("div");
+controlButton.innerHTML = `<div class="geofs-autopilot-bar">
+                <div class="control-pad geofs-autopilot-pad" id="0.35219131053109255" tabindex="0">
+                    <div class="control-pad-label transp-pad">AUTOPILOT</div>
+            </div>`;
+const container = document.getElementsByClassName("geofs-ui-top");
+container[0].appendChild(controlButton);
+document
+    .getElementById("0.35219131053109255")
+    .addEventListener("click", function () {
+        const autopilotState = this.classList.toggle("active");
+        alert("Autopilot is now " + (autopilotState ? "ON" : "OFF"));
+    });
