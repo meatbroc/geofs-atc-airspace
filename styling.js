@@ -33,7 +33,11 @@ style.innerHTML = `
     .ext-autopilot-bar .ext-autopilot-switch .ext-switchRight {
         border-radius: 0px 15px 15px 0px;
     }
-    .geofs-autopilot-bar .geofs-autopilot-switch a {
+    .ext-autopilot-bar .ext-autopilot-switch .ext-switchLeft {
+        border-radius: 15px 0px 0px 15px;
+        border-right: 0px;
+    }
+    .ext-autopilot-bar .ext-autopilot-switch a {
         user-select: none;
         -webkit-user-select: none;
         position: relative;
@@ -48,6 +52,14 @@ style.innerHTML = `
         display: inline-block;
         border: 1px solid white;
         box-shadow: 0px 0px 5px #000;
+    }
+    .ext-autopilot-bar .ext-autopilot-control {
+        position: relative;
+        text-align: center;
+        margin: 0px 5px;
+        color: white;
+        line-height: 25px;
+        display: inline-block;
     }
     .ext-autopilot-bar {
         opacity: 0.5;
@@ -72,9 +84,9 @@ controlElmnt.classList.add('ext-autopilot-controls');
 controlElmnt.style.display = 'none';
 controlElmnt.innerHTML = `
                     <div class="ext-autopilot-control">
-                        <span class="geofs-autopilot-switch geofs-autopilot-mode">
-                            <a class="switchLeft geofs-autopilot-HDG green-pad" data-method="setMode" value="HDG">RDR</a>
-                            <a class="switchRight geofs-autopilot-NAV" data-method="setMode" value="NAV">VIS</a>
+                        <span class="ext-autopilot-switch ext-autopilot-mode">
+                            <a class="ext-switchLeft geofs-autopilot-HDG green-pad" data-method="setMode" value="HDG">RDR</a>
+                            <a class="ext-switchRight geofs-autopilot-NAV" data-method="setMode" value="NAV">VIS</a>
                         </span>
                     </div>
 `
