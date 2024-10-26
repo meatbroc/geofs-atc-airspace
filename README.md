@@ -1,3 +1,4 @@
 # geofs-atc-airspace
 
--fix the fkin html
+- integrate styling.js into main
+- add uhh some functionality to the added buttons
