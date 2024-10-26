@@ -29,13 +29,17 @@ style.innerHTML = `
         text-align: center;
         text-shadow: #000 1px 1px 3px;
         font-size: 12px;
+        top: 2px;
+        position: relative;
     }
     .ext-autopilot-bar .ext-autopilot-switch .ext-switchRight {
         border-radius: 0px 15px 15px 0px;
+        left: 0px;
     }
     .ext-autopilot-bar .ext-autopilot-switch .ext-switchLeft {
         border-radius: 15px 0px 0px 15px;
-        border-right: 0px;
+        border-right: 5px;
+        right: -3px;
     }
     .ext-autopilot-bar .ext-autopilot-switch a {
         user-select: none;
@@ -85,8 +89,8 @@ controlElmnt.style.display = 'none';
 controlElmnt.innerHTML = `
                     <div class="ext-autopilot-control">
                         <span class="ext-autopilot-switch ext-autopilot-mode">
-                            <a class="ext-switchLeft geofs-autopilot-HDG green-pad" data-method="setMode" value="HDG">RDR</a>
-                            <a class="ext-switchRight geofs-autopilot-NAV" data-method="setMode" value="NAV">VIS</a>
+                            <a class="ext-switchLeft green-pad" data-method="setMode" value="HDG">RDR</a>
+                            <a class="ext-switchRight" data-method="setMode" value="NAV">VIS</a>
                         </span>
                     </div>
 `
