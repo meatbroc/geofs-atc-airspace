@@ -110,7 +110,7 @@
         console.log(a);
         console.log(b);
         sonarSound.play();
-        ui.notification.show('someone entered ur airspace')
+        ui.notification.show("someone entered ur airspace");
     }
     airspace.init = function () {
         a = check(multiplayer.users);
@@ -131,192 +131,112 @@
     };
     const style = document.createElement("style");
     style.innerHTML = `
-      .atc-visible {
-          display: block !important;
-          position: absolute;
-          opacity: 0.5;
-      }
-  
-      .atc-toggle-panel {
-          display: none;
-      }
-  
-      .atc-opacity {
-          opacity: 1 !important;
-      }
-  `;
+    .ext-autopilot-pad {
+        width: 90px;
+        margin: 0px 10px;
+    }
+    .ext-control-pad {
+        border: 1px solid #888;
+        background-color: #000;
+        box-shadow: 0px 0px 5px #000;
+        border-radius: 15px;
+        cursor: pointer !important;
+    }
+    .ext-autopilot-controls {
+        vertical-align: bottom;
+        display: none;
+        margin-right: 10px;
+    }
+    .ext-autopilot-control {
+        position: relative;
+        text-align: center;
+        margin: 0px 5px;
+        color: white;
+        line-height: 25px;
+        display: inline-block;
+    }
+    .ext-autopilot-control span {
+        display: block;
+        text-align: center;
+        text-shadow: #000 1px 1px 3px;
+        font-size: 12px;
+        top: 2px;
+        position: relative;
+    }
+    .ext-autopilot-bar .ext-autopilot-switch .ext-switchRight {
+        border-radius: 0px 15px 15px 0px;
+        left: 0px;
+    }
+    .ext-autopilot-bar .ext-autopilot-switch .ext-switchLeft {
+        border-radius: 15px 0px 0px 15px;
+        border-right: 5px;
+        right: -3px;
+    }
+    .ext-autopilot-bar .ext-autopilot-switch a {
+        user-select: none;
+        -webkit-user-select: none;
+        position: relative;
+        display: inline-block;
+        width: 35px;
+        height: 17px;
+        line-height: 19px;
+        cursor: pointer;
+        color: white;
+        background: #000;
+        margin: 2px 0px;
+        display: inline-block;
+        border: 1px solid white;
+        box-shadow: 0px 0px 5px #000;
+    }
+    .ext-autopilot-bar .ext-autopilot-control {
+        position: relative;
+        text-align: center;
+        margin: 0px 5px;
+        color: white;
+        line-height: 25px;
+        display: inline-block;
+    }
+    .ext-autopilot-bar {
+        opacity: 0.5;
+        margin-top: 5px;
+        white-space: nowrap;
+        display: flex;
+        align-items: flex-start;
+        pointer-events: all;
+    }
+`;
     document.head.appendChild(style);
-
-    function createButton(text, onClick, identifier) {
-        const button = document.createElement("button");
-        button.innerText = text;
-        button.style.position = "relative";
-        button.style.opacity = "1";
-        button.style.zIndex = 1000; // Raise the z-index
-        button.addEventListener("click", onClick);
-        button.classList.add("mdl-button");
-        button.style.filter = "opacity(1)";
-        button.style.color = "rgba(0, 0, 0, 1)";
-        button.id = identifier;
-        return button;
-    }
-
-    function createHeader(identifier) {
-        const header = document.createElement("div");
-        header.style.position = "relative";
-        header.style.bottom = "0px";
-        header.style.backgroundColor = "red";
-        header.style.width = "180px";
-        header.style.height = "20px";
-        header.style.zIndex = 1000;
-        header.style.color = "red";
-        header.classList.add("ext-toggle-panel"); // Correct class assignment
-        header.id = identifier;
-        header.innerText = "Buttons";
-        return header;
-    }
-    function createBox(identifier) {
-        const box = document.createElement("div");
-        box.style.position = "absolute";
-        box.style.backgroundColor = "white";
-        box.style.width = "180px";
-        box.style.height = "300px";
-        box.style.zIndex = 999; // Raise the z-index
-        box.classList.add("ext-toggle-panel");
-        box.id = identifier; // Correct method to set the id
-        return box;
-    }
-    function createInput(identifier) {
-        const inputBox = document.createElement("input");
-        inputBox.style.position = "relative";
-        inputBox.style.width = "90px";
-        inputBox.style.left = "0px";
-        inputBox.style.bottom = "0px";
-        inputBox.id = identifier;
-        inputBox.classList.add("geofs-stopKeyboardPropagation");
-        inputBox.classList.add("geofs-stopKeyupPropagation");
-        return inputBox;
-    }
-
-    function toggleATC() {
-        atcPanel.classList.toggle("atc-visible");
-        atcHeader.classList.toggle("atc-visible");
-    }
-    let mode;
-    function toVis() {
-        mode = 0;
-        console.log(mode);
-    }
-    function toCoord() {
-        mode = 1;
-        console.log(mode);
-    }
-    const submitAirport = function () {
-        if (document.getElementById("airport-input").value) {
-            userInput = document
-                .getElementById("airport-input")
-                .value.toUpperCase();
-            if (geofs.mainAirportList[userInput]) {
-                airportName = userInput;
+    const controlButton = document.createElement("div");
+    controlButton.classList.add("ext-autopilot-bar");
+    controlButton.innerHTML = `
+                <div class="ext-control-pad ext-autopilot-pad" id="atc-button" tabindex="0">
+                    <div class="control-pad-label transp-pad">ATC</div>
+                    `;
+    const container = document.getElementsByClassName("geofs-ui-top");
+    container[0].appendChild(controlButton);
+    const controlElmnt = document.createElement("div");
+    controlElmnt.classList.add("ext-autopilot-controls");
+    controlElmnt.style.display = "none";
+    controlElmnt.innerHTML = `
+                    <div class="ext-autopilot-control">
+                        <span class="ext-autopilot-switch ext-autopilot-mode">
+                            <a class="ext-switchLeft green-pad" data-method="setMode" value="HDG">RDR</a>
+                            <a class="ext-switchRight" data-method="setMode" value="NAV">VIS</a>
+                        </span>
+                    </div>
+`;
+    const container2 = document.getElementsByClassName("ext-autopilot-bar");
+    container2[0].appendChild(controlElmnt);
+    document
+        .getElementById("atc-button")
+        .addEventListener("click", function () {
+            const autopilotState = this.classList.toggle("active");
+            if (this.classList.contains("active")) {
+                controlElmnt.style.display = "block";
             } else {
-                ui.notification.show(`${userInput} is not a valid airport`);
+                controlElmnt.style.display = "none";
             }
-        }
-        document.getElementById("airport-input").value = null;
-    };
-
-    const atcToggler = createButton("ATC", toggleATC, "atc-toggle");
-    const atcPanel = createBox("atc-panel");
-    const atcHeader = createHeader("atc-header");
-    const airportInput = createInput("airport-input");
-    const airportSubmit = createButton(
-        "SUBMIT",
-        submitAirport,
-        "airport-submit",
-    );
-    const visRadar = createButton("USE VISIBLE", toVis, "visible-radar");
-    const coordRadar = createButton("USE COORDS", toCoord, "coordinate-radar");
-
-    const container = document.querySelector(".geofs-ui-bottom");
-
-    container.appendChild(atcToggler);
-    document.body.appendChild(atcPanel);
-    atcPanel.appendChild(atcHeader);
-    atcPanel.appendChild(airportInput);
-    atcPanel.appendChild(airportSubmit);
-    atcPanel.appendChild(visRadar);
-    atcPanel.appendChild(coordRadar);
-
-    const hoverMouse = () => {
-        const atcHeader = document.getElementById("atc-header");
-        if (atcHeader) {
-            // Check if the element exists
-            atcHeader.addEventListener("mouseover", (event) => {
-                // Change the cursor to grab on mouseover
-                event.target.style.cursor = "grab";
-            });
-            atcHeader.addEventListener("mousedown", (event) => {
-                // Change the cursor to grabbing on mousedown
-                event.target.style.cursor = "grabbing";
-            });
-            atcHeader.addEventListener("mouseup", (event) => {
-                // Change the cursor back to grab on mouseup
-                event.target.style.cursor = "grab";
-            });
-        } else {
-            console.error("Element with ID 'atc-header' not found.");
-        }
-    };
-
-    // Call the function to add the event listener
-    hoverMouse();
-
-    dragElement(document.getElementById("atc-panel"));
-
-    function dragElement(elmnt) {
-        var pos1 = 0,
-            pos2 = 0,
-            pos3 = 0,
-            pos4 = 0;
-        if (document.getElementById(elmnt.id + "header")) {
-            /* if present, the header is where you move the DIV from:*/
-            document.getElementById(elmnt.id + "header").onmousedown =
-                dragMouseDown;
-        } else {
-            /* otherwise, move the DIV from anywhere inside the DIV:*/
-            elmnt.onmousedown = dragMouseDown;
-        }
-
-        function dragMouseDown(e) {
-            e = e || window.event;
-            e.preventDefault();
-            // get the mouse cursor position at startup:
-            pos3 = e.clientX;
-            pos4 = e.clientY;
-            document.onmouseup = closeDragElement;
-            // call a function whenever the cursor moves:
-            document.onmousemove = elementDrag;
-        }
-
-        function elementDrag(e) {
-            e = e || window.event;
-            e.preventDefault();
-            // calculate the new cursor position:
-            pos1 = pos3 - e.clientX;
-            pos2 = pos4 - e.clientY;
-            pos3 = e.clientX;
-            pos4 = e.clientY;
-            // set the element's new position:
-            elmnt.style.top = elmnt.offsetTop - pos2 + "px";
-            elmnt.style.left = elmnt.offsetLeft - pos1 + "px";
-        }
-
-        function closeDragElement() {
-            /* stop moving when mouse button is released:*/
-            document.onmouseup = null;
-            document.onmousemove = null;
-        }
-    }
+        });
 })();
 
 // multiplayer.visibleUsers
