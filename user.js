@@ -74,7 +74,7 @@ let radius = 15;
         let internalArr = [];
         for (const [key, value] of Object.entries(mObj)) {
             try {
-                if (value.lastUpdate.co) {
+                if (!value.lastUpdate.co === 'undefined') {
                     if (checkUser(value.lastUpdate.co, value.lastUpdate.cs)) {
                         // console.log(key)
                         // usersIn.push(value.lastUpdate.cs)
@@ -82,12 +82,13 @@ let radius = 15;
                     }
                 }
             } catch (error) {
-                console.log("Key:" + key + "Value:" + value);
+                console.log("Key: " + key + "Value: " + value);
             }
         }
         return internalArr;
     }
     let airspace = {};
+    let visible = {};
     let a;
     let b;
     let sonarSound = new Audio(
@@ -116,6 +117,12 @@ let radius = 15;
         a = undefined;
         b = undefined;
     };
+    visible.init = function () {
+        console.log('ohio')
+    }
+    visible.stop = function () {
+        console.log('fanum tax')
+    }
     const style = document.createElement("style");
     style.innerHTML = `
     .ext-autopilot-pad {
@@ -207,13 +214,14 @@ let radius = 15;
     controlElmnt.innerHTML = `
                     <div class="ext-autopilot-control">
                         <span class="ext-autopilot-switch ext-autopilot-mode">
-                            <a class="ext-switchLeft green-pad" data-method="setMode" value="HDG">RDR</a>
-                            <a class="ext-switchRight" data-method="setMode" value="NAV">VIS</a>
+                            <a class="ext-switchLeft" data-method="setMode" value="HDG" id="radar-sel">RDR</a>
+                            <a class="ext-switchRight" data-method="setMode" value="NAV" id="vis-sel">VIS</a>
                         </span>
                     </div>
 `;
     const container2 = document.getElementsByClassName("ext-autopilot-bar");
     container2[0].appendChild(controlElmnt);
+    let extMode = 0;
     document
         .getElementById("atc-button")
         .addEventListener("click", function () {
@@ -222,5 +230,38 @@ let radius = 15;
                 controlElmnt.style.display = "block";
             } else {
                 controlElmnt.style.display = "none";
+                extMode = 0;
+            }
+        });
+    document
+        .getElementById("radar-sel")
+        .addEventListener("click", function () {
+            if (extMode === 0) {
+                extMode = 1;
+                airspace.init()
+                this.classList.add('green-pad')
+            }
+            if (extMode === 2) {
+                visible.stop()
+                document.getElementById("vis-sel").classList.remove('green-pad')
+                extMode = 1;
+                airspace.init();
+                this.classList.add('green-pad')
+            }
+        });
+    document
+        .getElementById("vis-sel")
+        .addEventListener("click", function () {
+            if (extMode === 0) {
+                extMode = 2;
+                visible.init()
+                this.classList.add('green-pad')
+            }
+            if (extMode === 1) {
+                extMode = 2;
+                airspace.stop()
+                visible.init()
+                document.getElementById("radar-sel").classList.remove('green-pad')
+                this.classList.add('green-pad')
             }
         });
