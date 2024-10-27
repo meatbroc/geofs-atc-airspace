@@ -74,7 +74,7 @@ let radius = 15;
         let internalArr = [];
         for (const [key, value] of Object.entries(mObj)) {
             try {
-                if (!value.lastUpdate.co === 'undefined') {
+                if (value.lastUpdate.co !== undefined && value.lastUpdate.co !== null) {
                     if (checkUser(value.lastUpdate.co, value.lastUpdate.cs)) {
                         // console.log(key)
                         // usersIn.push(value.lastUpdate.cs)
@@ -82,7 +82,7 @@ let radius = 15;
                     }
                 }
             } catch (error) {
-                console.log("Key: " + key + "Value: " + value);
+                console.log("Key: " + key + " Value: " + value);
             }
         }
         return internalArr;
