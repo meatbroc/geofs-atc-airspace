@@ -1,4 +1,4 @@
-let radius = 15;
+    let radius = 15;
     let airportName = "PHNL";
     function checkUser(spotCoordinates) {
         let newRadius = distanceInKmBetweenEarthCoordinates(
@@ -231,9 +231,18 @@ let radius = 15;
                             <a class="ext-switchRight" data-method="setMode" value="NAV" id="vis-sel">VIS</a>
                         </span>
                     </div>
-`;
+    `;
+    // -------------------- WORK ON THIS
+    const radiusElmnt = document.createElement('div');
+    radiusElmnt.classList.add('ext-autopilot-control');
+    radiusElmnt.style.display = 'none';
+    radiusElmnt.innerHTML = `
+                        <a class="numberDown">-</a><input class="numberValue geofs-autopilot-course" min="0" max="359" data-loop="true" step="1" data-method="setCourse" maxlength="3" value="000"><a class="numberUp">+</a>
+    `;
+    // --------------------
     const container2 = document.getElementsByClassName("ext-autopilot-bar");
     container2[0].appendChild(controlElmnt);
+    container2[0].appendChild(radiusElmnt);
     let extMode = 0;
     document
         .getElementById("atc-button")
