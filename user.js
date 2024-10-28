@@ -82,7 +82,7 @@ let radius = 15;
                     }
                 }
             } catch (error) {
-                console.log("Key: " + key + " Value: " + value);
+                // console.log("Key: " + key + " Value: " + value);
             }
         }
         return internalArr;
@@ -91,14 +91,14 @@ let radius = 15;
     let visible = {};
     let a;
     let b;
+    let d;
+    let e;
     let sonarSound = new Audio(
         "https://raw.githubusercontent.com/meatbroc/geofs-atc-airspace/main/sonar.mp3",
     );
     function action() {
-        console.log(a);
-        console.log(b);
         sonarSound.play();
-        ui.notification.show("someone entered ur airspace");
+        ui.notification.show(`someone entered ${airportName}'s airspace`);
     }
     airspace.init = function () {
         a = check(multiplayer.users);
@@ -118,10 +118,23 @@ let radius = 15;
         b = undefined;
     };
     visible.init = function () {
+        d = Object.keys(multiplayer.visibleUsers).map((key) => key);;
+        e = Object.keys(multiplayer.visibleUsers).map((key) => key);;
+        function f() {
+            if (!d.equals(e)) {
+                action();
+            }
+            d = e;
+            e = Object.keys(multiplayer.visibleUsers).map((key) => key);
+        }
+        visible.interval = setInterval(f, 200);
         console.log('ohio')
     }
     visible.stop = function () {
         console.log('fanum tax')
+        clearInterval(visible.interval);
+        d = undefined;
+        e = undefined;
     }
     const style = document.createElement("style");
     style.innerHTML = `
@@ -204,7 +217,7 @@ let radius = 15;
     controlButton.classList.add("ext-autopilot-bar");
     controlButton.innerHTML = `
                 <div class="ext-control-pad ext-autopilot-pad" id="atc-button" tabindex="0">
-                    <div class="control-pad-label transp-pad">ATC</div>
+                    <div class="control-pad-label transp-pad">AIRSPACE</div>
                     `;
     const container = document.getElementsByClassName("geofs-ui-top");
     container[0].appendChild(controlButton);
@@ -228,9 +241,23 @@ let radius = 15;
             const autopilotState = this.classList.toggle("active");
             if (this.classList.contains("active")) {
                 controlElmnt.style.display = "block";
+                this.classList.add('green-pad')
+                if (this.classList.contains("red-pad")) {
+                    this.classList.remove("red-pad")
+                }
             } else {
                 controlElmnt.style.display = "none";
+                if (extMode === 1) {
+                    airspace.stop()
+                } else if (extMode === 2) {
+                    visible.stop()
+                }
                 extMode = 0;
+                this.classList.remove('green-pad')
+                this.classList.add('red-pad')
+                setTimeout(() => {
+                    this.classList.remove('red-pad')
+                }, 3000)
             }
         });
     document
