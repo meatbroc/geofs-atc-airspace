@@ -87,7 +87,7 @@
         let internalArr = [];
         for (const [key, value] of Object.entries(mObj)) {
             try {
-                if (value.lastUpdate.co) {
+                if (value.lastUpdate.co !== undefined && value.lastUpdate.co !== null) {
                     if (checkUser(value.lastUpdate.co, value.lastUpdate.cs)) {
                         // console.log(key)
                         // usersIn.push(value.lastUpdate.cs)
@@ -95,22 +95,23 @@
                     }
                 }
             } catch (error) {
-                console.log("Key:" + key + "Value:" + value);
+                // console.log("Key: " + key + " Value: " + value);
             }
         }
         return internalArr;
     }
     let airspace = {};
+    let visible = {};
     let a;
     let b;
+    let d;
+    let e;
     let sonarSound = new Audio(
         "https://raw.githubusercontent.com/meatbroc/geofs-atc-airspace/main/sonar.mp3",
     );
     function action() {
-        console.log(a);
-        console.log(b);
         sonarSound.play();
-        ui.notification.show("someone entered ur airspace");
+        ui.notification.show(`someone entered ${airportName}'s airspace`);
     }
     airspace.init = function () {
         a = check(multiplayer.users);
@@ -129,6 +130,25 @@
         a = undefined;
         b = undefined;
     };
+    visible.init = function () {
+        d = Object.keys(multiplayer.visibleUsers).map((key) => key);;
+        e = Object.keys(multiplayer.visibleUsers).map((key) => key);;
+        function f() {
+            if (!d.equals(e)) {
+                action();
+            }
+            d = e;
+            e = Object.keys(multiplayer.visibleUsers).map((key) => key);
+        }
+        visible.interval = setInterval(f, 200);
+        console.log('ohio')
+    }
+    visible.stop = function () {
+        console.log('fanum tax')
+        clearInterval(visible.interval);
+        d = undefined;
+        e = undefined;
+    }
     const style = document.createElement("style");
     style.innerHTML = `
     .ext-autopilot-pad {
@@ -210,7 +230,7 @@
     controlButton.classList.add("ext-autopilot-bar");
     controlButton.innerHTML = `
                 <div class="ext-control-pad ext-autopilot-pad" id="atc-button" tabindex="0">
-                    <div class="control-pad-label transp-pad">ATC</div>
+                    <div class="control-pad-label transp-pad">AIRSPACE</div>
                     `;
     const container = document.getElementsByClassName("geofs-ui-top");
     container[0].appendChild(controlButton);
@@ -220,21 +240,69 @@
     controlElmnt.innerHTML = `
                     <div class="ext-autopilot-control">
                         <span class="ext-autopilot-switch ext-autopilot-mode">
-                            <a class="ext-switchLeft green-pad" data-method="setMode" value="HDG">RDR</a>
-                            <a class="ext-switchRight" data-method="setMode" value="NAV">VIS</a>
+                            <a class="ext-switchLeft" data-method="setMode" value="HDG" id="radar-sel">RDR</a>
+                            <a class="ext-switchRight" data-method="setMode" value="NAV" id="vis-sel">VIS</a>
                         </span>
                     </div>
 `;
     const container2 = document.getElementsByClassName("ext-autopilot-bar");
     container2[0].appendChild(controlElmnt);
+    let extMode = 0;
     document
         .getElementById("atc-button")
         .addEventListener("click", function () {
             const autopilotState = this.classList.toggle("active");
             if (this.classList.contains("active")) {
                 controlElmnt.style.display = "block";
+                this.classList.add('green-pad')
+                if (this.classList.contains("red-pad")) {
+                    this.classList.remove("red-pad")
+                }
             } else {
                 controlElmnt.style.display = "none";
+                if (extMode === 1) {
+                    airspace.stop()
+                } else if (extMode === 2) {
+                    visible.stop()
+                }
+                extMode = 0;
+                this.classList.remove('green-pad')
+                this.classList.add('red-pad')
+                setTimeout(() => {
+                    this.classList.remove('red-pad')
+                }, 3000)
+            }
+        });
+    document
+        .getElementById("radar-sel")
+        .addEventListener("click", function () {
+            if (extMode === 0) {
+                extMode = 1;
+                airspace.init()
+                this.classList.add('green-pad')
+            }
+            if (extMode === 2) {
+                visible.stop()
+                document.getElementById("vis-sel").classList.remove('green-pad')
+                extMode = 1;
+                airspace.init();
+                this.classList.add('green-pad')
+            }
+        });
+    document
+        .getElementById("vis-sel")
+        .addEventListener("click", function () {
+            if (extMode === 0) {
+                extMode = 2;
+                visible.init()
+                this.classList.add('green-pad')
+            }
+            if (extMode === 1) {
+                extMode = 2;
+                airspace.stop()
+                visible.init()
+                document.getElementById("radar-sel").classList.remove('green-pad')
+                this.classList.add('green-pad')
             }
         });
 })();
