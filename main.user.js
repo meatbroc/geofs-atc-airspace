@@ -11,7 +11,7 @@
 // ==/UserScript==
 
 (function () {
-    let radius = 15;
+    let radius = 1;
     let airportName = "PHNL";
     function checkUser(spotCoordinates) {
         let newRadius = distanceInKmBetweenEarthCoordinates(
@@ -299,7 +299,7 @@
     radiusElmnt.style.display = 'none';
     radiusElmnt.innerHTML = `
                         <a class="ext-numberDown" id="radius-selDown">-</a>
-                        <input class="ext-numberValue ext-autopilot-course" min="0" max="359" data-loop="true" step="1" maxlength="3" value="0">
+                        <input class="ext-numberValue ext-autopilot-course" min="0" max="359" data-loop="true" step="1" maxlength="3" value="1">
                         <a class="ext-numberUp" id="radius-selUp">+</a>
                         <span>RDR RADIUS</span>
     `;
@@ -382,7 +382,7 @@
     document
         .getElementById("radius-selDown")
         .addEventListener("click", function () {
-            if (radiusElmnt.childNodes[3].value > 0) {
+            if (radiusElmnt.childNodes[3].value > 1) {
                 radiusElmnt.childNodes[3].value--
             }
             radius = parseInt(radiusElmnt.childNodes[3].value)
