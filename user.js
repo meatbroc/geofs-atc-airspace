@@ -214,15 +214,17 @@
     .ext-autopilot-bar .ext-autopilot-course {
         width: 35px !important;
     }
-    .ext-autopilot-control .ext-numberDown {
+    .ext-numberDown {
         border-radius: 15px 0px 0px 15px;
-        border-right: 0px;
         line-height: 23px;
+        right: -5px;
+        position: relative !important;
     }
-    .ext-autopilot-control .ext-numberUp {
+    .ext-numberUp {
         border-radius: 0px 15px 15px 0px;
-        border-left: 0px;
         line-height: 26px;
+        left: -5px;
+        position: relative !important;
     }
     .ext-autopilot-control .ext-numberDown,.ext-autopilot-control .ext-numberUp {
         user-select: none;
@@ -286,6 +288,7 @@
                         <a class="ext-numberDown" id="radius-selDown">-</a>
                         <input class="ext-numberValue ext-autopilot-course" min="0" max="359" data-loop="true" step="1" maxlength="3" value="0">
                         <a class="ext-numberUp" id="radius-selUp">+</a>
+                        <span>RDR RADIUS</span>
     `;
     // -------------------- radiusElmnt.childNodes[3].value
     // use ++ or -- for increment & decrement, respectively
@@ -299,7 +302,6 @@
             const autopilotState = this.classList.toggle("active");
             if (this.classList.contains("active")) {
                 controlElmnt.style.display = "block";
-                radiusElmnt.style.display = "block";
                 this.classList.add('green-pad')
                 if (this.classList.contains("red-pad")) {
                     this.classList.remove("red-pad")
@@ -309,8 +311,10 @@
                 radiusElmnt.style.display = "none";
                 if (extMode === 1) {
                     airspace.stop()
+                    document.getElementById("radar-sel").classList.remove('green-pad')
                 } else if (extMode === 2) {
                     visible.stop()
+                    document.getElementById("vis-sel").classList.remove('green-pad')
                 }
                 extMode = 0;
                 this.classList.remove('green-pad')
@@ -335,6 +339,7 @@
                 airspace.init();
                 this.classList.add('green-pad')
             }
+            radiusElmnt.style.display = "block";
         });
     document
         .getElementById("vis-sel")
@@ -351,6 +356,7 @@
                 document.getElementById("radar-sel").classList.remove('green-pad')
                 this.classList.add('green-pad')
             }
+            radiusElmnt.style.display = "none";
         });
     document
         .getElementById("radius-selUp")
@@ -358,11 +364,13 @@
             if (radiusElmnt.childNodes[3].value < 25) {
                 radiusElmnt.childNodes[3].value++
             }
+            radius = parseInt(radiusElmnt.childNodes[3].value)
         });
     document
         .getElementById("radius-selDown")
         .addEventListener("click", function () {
-            if (radiusElmnt.childNodes[3].value === !0) {
+            if (radiusElmnt.childNodes[3].value > 0) {
                 radiusElmnt.childNodes[3].value--
             }
+            radius = parseInt(radiusElmnt.childNodes[3].value)
         });
