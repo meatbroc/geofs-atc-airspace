@@ -155,6 +155,14 @@
         width: 90px;
         margin: 0px 10px;
     }
+    .ext-autopilot-bar {
+        opacity: 0.5;
+        margin-top: 5px;
+        white-space: nowrap;
+        display: flex;
+        align-items: flex-start;
+        pointer-events: all;
+    }
     .ext-control-pad {
         border: 1px solid #888;
         background-color: #000;
@@ -216,13 +224,53 @@
         line-height: 25px;
         display: inline-block;
     }
-    .ext-autopilot-bar {
-        opacity: 0.5;
-        margin-top: 5px;
-        white-space: nowrap;
-        display: flex;
-        align-items: flex-start;
-        pointer-events: all;
+    .ext-autopilot-bar .ext-autopilot-course {
+        width: 35px !important;
+    }
+    .ext-numberDown {
+        border-radius: 15px 0px 0px 15px;
+        line-height: 23px;
+        right: -5px;
+        position: relative !important;
+    }
+    .ext-numberUp {
+        border-radius: 0px 15px 15px 0px;
+        line-height: 26px;
+        left: -5px;
+        position: relative !important;
+    }
+    .ext-autopilot-control .ext-numberDown,.ext-autopilot-control .ext-numberUp {
+        user-select: none;
+        -webkit-user-select: none;
+        vertical-align: top;
+        cursor: pointer;
+        text-align: center;
+        color: white;
+        background: #000;
+        margin: 0px;
+        width: 30px;
+        display: inline-block;
+        border: 1px solid white;
+        height: 25px;
+        box-shadow: 0px 0px 5px #000;
+    }
+    .ext-autopilot-control .ext-numberValue {
+        font-family: 'LCD-Bold', monospace;
+        font-size: 20px !important;
+        letter-spacing: 1px;
+        display: inline-block;
+        vertical-align: top;
+        padding: 0px 5px;
+        margin: 0px;
+        background: #000;
+        border: 1px solid;
+        border-radius: 0px;
+        height: 25px;
+        line-height: 26px;
+        box-shadow: 0px 0px 5px #000;
+        color: white;
+        width: 80px;
+        text-align: right;
     }
 `;
     document.head.appendChild(style);
@@ -244,9 +292,22 @@
                             <a class="ext-switchRight" data-method="setMode" value="NAV" id="vis-sel">VIS</a>
                         </span>
                     </div>
-`;
+    `;
+    // -------------------- WORK ON THIS
+    const radiusElmnt = document.createElement('div');
+    radiusElmnt.classList.add('ext-autopilot-control');
+    radiusElmnt.style.display = 'none';
+    radiusElmnt.innerHTML = `
+                        <a class="ext-numberDown" id="radius-selDown">-</a>
+                        <input class="ext-numberValue ext-autopilot-course" min="0" max="359" data-loop="true" step="1" maxlength="3" value="0">
+                        <a class="ext-numberUp" id="radius-selUp">+</a>
+                        <span>RDR RADIUS</span>
+    `;
+    // -------------------- radiusElmnt.childNodes[3].value
+    // use ++ or -- for increment & decrement, respectively
     const container2 = document.getElementsByClassName("ext-autopilot-bar");
     container2[0].appendChild(controlElmnt);
+    container2[0].appendChild(radiusElmnt);
     let extMode = 0;
     document
         .getElementById("atc-button")
@@ -260,10 +321,13 @@
                 }
             } else {
                 controlElmnt.style.display = "none";
+                radiusElmnt.style.display = "none";
                 if (extMode === 1) {
                     airspace.stop()
+                    document.getElementById("radar-sel").classList.remove('green-pad')
                 } else if (extMode === 2) {
                     visible.stop()
+                    document.getElementById("vis-sel").classList.remove('green-pad')
                 }
                 extMode = 0;
                 this.classList.remove('green-pad')
@@ -288,6 +352,7 @@
                 airspace.init();
                 this.classList.add('green-pad')
             }
+            radiusElmnt.style.display = "block";
         });
     document
         .getElementById("vis-sel")
@@ -304,6 +369,23 @@
                 document.getElementById("radar-sel").classList.remove('green-pad')
                 this.classList.add('green-pad')
             }
+            radiusElmnt.style.display = "none";
+        });
+    document
+        .getElementById("radius-selUp")
+        .addEventListener("click", function () {
+            if (radiusElmnt.childNodes[3].value < 25) {
+                radiusElmnt.childNodes[3].value++
+            }
+            radius = parseInt(radiusElmnt.childNodes[3].value)
+        });
+    document
+        .getElementById("radius-selDown")
+        .addEventListener("click", function () {
+            if (radiusElmnt.childNodes[3].value > 0) {
+                radiusElmnt.childNodes[3].value--
+            }
+            radius = parseInt(radiusElmnt.childNodes[3].value)
         });
 })();
 
