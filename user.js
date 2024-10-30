@@ -170,6 +170,14 @@
         line-height: 25px;
         display: inline-block;
     }
+    .ext-airport-label {
+        position: relative !important;
+        left: 17.5px;
+    }
+    .ext-highlighted {
+        color: #66ff00 !important;
+        border-color: white !important;
+    }
     .ext-autopilot-control span {
         display: block;
         text-align: center;
@@ -214,6 +222,9 @@
     .ext-autopilot-bar .ext-autopilot-course {
         width: 35px !important;
     }
+    .ext-autopilot-bar .ext-autopilot-airport {
+        width: 70px !important;
+    }
     .ext-numberDown {
         border-radius: 15px 0px 0px 15px;
         line-height: 23px;
@@ -225,6 +236,9 @@
         line-height: 26px;
         left: -5px;
         position: relative !important;
+    }
+    .ext-airportInput {
+        border-radius: 15px 0px 0px 15px !important;
     }
     .ext-autopilot-control .ext-numberDown,.ext-autopilot-control .ext-numberUp {
         user-select: none;
@@ -280,7 +294,6 @@
                         </span>
                     </div>
     `;
-    // -------------------- WORK ON THIS
     const radiusElmnt = document.createElement('div');
     radiusElmnt.classList.add('ext-autopilot-control');
     radiusElmnt.style.display = 'none';
@@ -290,11 +303,21 @@
                         <a class="ext-numberUp" id="radius-selUp">+</a>
                         <span>RDR RADIUS</span>
     `;
-    // -------------------- radiusElmnt.childNodes[3].value
-    // use ++ or -- for increment & decrement, respectively
+    // -------------------- WORK ON THIS
+    const airportElmnt = document.createElement('div');
+    airportElmnt.classList.add('ext-autopilot-control');
+    airportElmnt.style.display = 'block';
+    airportElmnt.style.width = '64px';
+    airportElmnt.innerHTML = `
+                        <input class="ext-highlighted ext-airportInput ext-numberValue ext-autopilot-airport geofs-stopKeyboardPropagation geofs-stopKeyupPropagation" min="0" max="359" data-loop="true" step="1" maxlength="4" value="1">
+                        <a class="ext-numberUp" id="radius-selUp">→</a>
+                        <span class="ext-airport-label">RDR RADIUS</span>
+    `;
+    // -------------------- radiusElmnt.childNodes[3].value might change bcs removal of seldown
     const container2 = document.getElementsByClassName("ext-autopilot-bar");
     container2[0].appendChild(controlElmnt);
     container2[0].appendChild(radiusElmnt);
+    container2[0].appendChild(airportElmnt);
     let extMode = 0;
     document
         .getElementById("atc-button")
