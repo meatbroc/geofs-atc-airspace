@@ -178,6 +178,10 @@
         color: #66ff00 !important;
         border-color: white !important;
     }
+    .ext-highlighted2 {
+        color: #FF0000 !important;
+        border-color: white !important;
+    }
     .ext-autopilot-control span {
         display: block;
         text-align: center;
@@ -306,12 +310,13 @@
     // -------------------- WORK ON THIS
     const airportElmnt = document.createElement('div');
     airportElmnt.classList.add('ext-autopilot-control');
+    // airportElmnt.classList.add('ext-highlighted');
     airportElmnt.style.display = 'block';
     airportElmnt.style.width = '64px';
     airportElmnt.innerHTML = `
-                        <input class="ext-highlighted ext-airportInput ext-numberValue ext-autopilot-airport geofs-stopKeyboardPropagation geofs-stopKeyupPropagation" min="0" max="359" data-loop="true" step="1" maxlength="4" value="1">
-                        <a class="ext-numberUp" id="radius-selUp">→</a>
-                        <span class="ext-airport-label">RDR RADIUS</span>
+                        <input class="ext-airportInput ext-numberValue ext-autopilot-airport geofs-stopKeyboardPropagation geofs-stopKeyupPropagation" id="airport-selInput" min="0" max="359" data-loop="true" step="1" maxlength="4" value="">
+                        <a class="ext-numberUp" id="airport-selSub">→</a>
+                        <span class="ext-airport-label">AIRPORT</span>
     `;
     // -------------------- radiusElmnt.childNodes[3].value might change bcs removal of seldown
     const container2 = document.getElementsByClassName("ext-autopilot-bar");
@@ -351,18 +356,15 @@
         .getElementById("radar-sel")
         .addEventListener("click", function () {
             if (extMode === 0) {
-                extMode = 1;
-                airspace.init()
                 this.classList.add('green-pad')
             }
             if (extMode === 2) {
                 visible.stop()
                 document.getElementById("vis-sel").classList.remove('green-pad')
-                extMode = 1;
-                airspace.init();
                 this.classList.add('green-pad')
             }
             radiusElmnt.style.display = "block";
+            airportElmnt.style.display = "block";
         });
     document
         .getElementById("vis-sel")
@@ -396,4 +398,33 @@
                 radiusElmnt.childNodes[3].value--
             }
             radius = parseInt(radiusElmnt.childNodes[3].value)
+        });
+// integrate these two things below with the things above
+// namely check for init conflict n stuff
+    document
+        .getElementById("airport-selSub")
+        .addEventListener("click", function () {
+            if (airportElmnt.childNodes[1].value.length === 4 && geofs.mainAirportList[airportElmnt.childNodes[1].value]) {
+                airportName = airportElmnt.childNodes[1].value
+                airportElmnt.childNodes[1].classList.add('ext-highlighted')
+                extMode = 1;
+                airspace.init()
+            } else {
+                airportElmnt.childNodes[1].classList.add('ext-highlighted2')
+                setTimeout(() => {
+                    airportElmnt.childNodes[1].classList.remove('ext-highlighted2')
+                    airportElmnt.childNodes[1].value = '';
+                }, 3000)
+            }
+        });
+    document
+        .getElementById("airport-selInput")
+        .addEventListener("click", function () {
+            this.value = '';
+            if (this.classList.contains('ext-highlighted')) {
+                this.classList.remove('ext-highlighted');
+            }
+            if (this.classList.contains('ext-highlighted2')) {
+                this.classList.remove('ext-highlighted2');
+            }
         });
