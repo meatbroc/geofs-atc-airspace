@@ -311,7 +311,7 @@
     const airportElmnt = document.createElement('div');
     airportElmnt.classList.add('ext-autopilot-control');
     // airportElmnt.classList.add('ext-highlighted');
-    // airportElmnt.style.display = 'block';
+    airportElmnt.style.display = 'none';
     airportElmnt.style.width = '64px';
     airportElmnt.innerHTML = `
                         <input class="ext-airportInput ext-numberValue ext-autopilot-airport geofs-stopKeyboardPropagation geofs-stopKeyupPropagation" id="airport-selInput" min="0" max="359" data-loop="true" step="1" maxlength="4" value="">
@@ -336,6 +336,7 @@
             } else {
                 controlElmnt.style.display = "none";
                 radiusElmnt.style.display = "none";
+                airportElmnt.style.display = "none"
                 if (extMode === 1) {
                     airspace.stop()
                     document.getElementById("radar-sel").classList.remove('green-pad')
@@ -372,6 +373,9 @@
                 extMode = 2;
                 visible.init()
                 this.classList.add('green-pad')
+                if (document.getElementById("radar-sel").classList.contains('green-pad')) {
+                    document.getElementById("radar-sel").classList.remove('green-pad')
+                }
             }
             if (extMode === 1) {
                 extMode = 2;
