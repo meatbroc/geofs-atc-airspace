@@ -1,5 +1,5 @@
     let radius = 1;
-    let airportName = "PHNL";
+    let airportName = "";
     function checkUser(spotCoordinates) {
         let newRadius = distanceInKmBetweenEarthCoordinates(
             spotCoordinates[0],
@@ -311,14 +311,13 @@
     const airportElmnt = document.createElement('div');
     airportElmnt.classList.add('ext-autopilot-control');
     // airportElmnt.classList.add('ext-highlighted');
-    airportElmnt.style.display = 'block';
+    // airportElmnt.style.display = 'block';
     airportElmnt.style.width = '64px';
     airportElmnt.innerHTML = `
                         <input class="ext-airportInput ext-numberValue ext-autopilot-airport geofs-stopKeyboardPropagation geofs-stopKeyupPropagation" id="airport-selInput" min="0" max="359" data-loop="true" step="1" maxlength="4" value="">
                         <a class="ext-numberUp" id="airport-selSub">→</a>
                         <span class="ext-airport-label">AIRPORT</span>
     `;
-    // -------------------- radiusElmnt.childNodes[3].value might change bcs removal of seldown
     const container2 = document.getElementsByClassName("ext-autopilot-bar");
     container2[0].appendChild(controlElmnt);
     container2[0].appendChild(radiusElmnt);
@@ -382,6 +381,7 @@
                 this.classList.add('green-pad')
             }
             radiusElmnt.style.display = "none";
+            airportElmnt.style.display = "none";
         });
     document
         .getElementById("radius-selUp")
@@ -400,7 +400,7 @@
             radius = parseInt(radiusElmnt.childNodes[3].value)
         });
 // integrate these two things below with the things above
-// namely check for init conflict n stuff
+// field test it
     document
         .getElementById("airport-selSub")
         .addEventListener("click", function () {
