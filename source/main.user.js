@@ -12,7 +12,7 @@
 
 (function () {
     let radius = 1;
-    let airportName = "PHNL";
+    let airportName = "";
     function checkUser(spotCoordinates) {
         let newRadius = distanceInKmBetweenEarthCoordinates(
             spotCoordinates[0],
@@ -20,16 +20,19 @@
             geofs.mainAirportList[airportName][0],
             geofs.mainAirportList[airportName][1],
         );
+        // console.log(`${spotCoordinates[0]} ${spotCoordinates[0]}`)
 
         if (newRadius < radius) {
             //point is inside the circle
             return true;
+            // console.log(`${callsign} is in`)
         } else if (newRadius > radius) {
             //point is outside the circle
             return false;
         } else {
             //point is on the circle
             return true;
+            // console.log(`${callsign} is in`)
         }
     }
     function distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
@@ -86,10 +89,13 @@
             try {
                 if (value.lastUpdate.co !== undefined && value.lastUpdate.co !== null) {
                     if (checkUser(value.lastUpdate.co, value.lastUpdate.cs)) {
+                        // console.log(key)
+                        // usersIn.push(value.lastUpdate.cs)
                         internalArr.push(key);
                     }
                 }
             } catch (error) {
+                // console.log("Key: " + key + " Value: " + value);
             }
         }
         return internalArr;
@@ -125,8 +131,8 @@
         b = undefined;
     };
     visible.init = function () {
-        d = Object.keys(multiplayer.visibleUsers).map((key) => key);;
-        e = Object.keys(multiplayer.visibleUsers).map((key) => key);;
+        d = Object.keys(multiplayer.visibleUsers).map((key) => key);
+        e = Object.keys(multiplayer.visibleUsers).map((key) => key);
         function f() {
             if (!d.equals(e)) {
                 action();
@@ -177,6 +183,18 @@
         line-height: 25px;
         display: inline-block;
     }
+    .ext-airport-label {
+        position: relative !important;
+        left: 17.5px;
+    }
+    .ext-highlighted {
+        color: #66ff00 !important;
+        border-color: white !important;
+    }
+    .ext-highlighted2 {
+        color: #FF0000 !important;
+        border-color: white !important;
+    }
     .ext-autopilot-control span {
         display: block;
         text-align: center;
@@ -221,6 +239,9 @@
     .ext-autopilot-bar .ext-autopilot-course {
         width: 35px !important;
     }
+    .ext-autopilot-bar .ext-autopilot-airport {
+        width: 70px !important;
+    }
     .ext-numberDown {
         border-radius: 15px 0px 0px 15px;
         line-height: 23px;
@@ -232,6 +253,9 @@
         line-height: 26px;
         left: -5px;
         position: relative !important;
+    }
+    .ext-airportInput {
+        border-radius: 15px 0px 0px 15px !important;
     }
     .ext-autopilot-control .ext-numberDown,.ext-autopilot-control .ext-numberUp {
         user-select: none;
@@ -296,9 +320,21 @@
                         <a class="ext-numberUp" id="radius-selUp">+</a>
                         <span>RDR RADIUS</span>
     `;
+    // -------------------- WORK ON THIS
+    const airportElmnt = document.createElement('div');
+    airportElmnt.classList.add('ext-autopilot-control');
+    // airportElmnt.classList.add('ext-highlighted');
+    airportElmnt.style.display = 'none';
+    airportElmnt.style.width = '64px';
+    airportElmnt.innerHTML = `
+                        <input class="ext-airportInput ext-numberValue ext-autopilot-airport geofs-stopKeyboardPropagation geofs-stopKeyupPropagation" id="airport-selInput" min="0" max="359" data-loop="true" step="1" maxlength="4" value="">
+                        <a class="ext-numberUp" id="airport-selSub">→</a>
+                        <span class="ext-airport-label">AIRPORT</span>
+    `;
     const container2 = document.getElementsByClassName("ext-autopilot-bar");
     container2[0].appendChild(controlElmnt);
     container2[0].appendChild(radiusElmnt);
+    container2[0].appendChild(airportElmnt);
     let extMode = 0;
     document
         .getElementById("atc-button")
@@ -313,6 +349,7 @@
             } else {
                 controlElmnt.style.display = "none";
                 radiusElmnt.style.display = "none";
+                airportElmnt.style.display = "none"
                 if (extMode === 1) {
                     airspace.stop()
                     document.getElementById("radar-sel").classList.remove('green-pad')
@@ -332,35 +369,50 @@
         .getElementById("radar-sel")
         .addEventListener("click", function () {
             if (extMode === 0) {
-                extMode = 1;
-                airspace.init()
+                extMode = 3;
                 this.classList.add('green-pad')
             }
             if (extMode === 2) {
+                extMode = 3;
                 visible.stop()
                 document.getElementById("vis-sel").classList.remove('green-pad')
-                extMode = 1;
-                airspace.init();
                 this.classList.add('green-pad')
             }
             radiusElmnt.style.display = "block";
+            airportElmnt.style.display = "block";
         });
     document
         .getElementById("vis-sel")
         .addEventListener("click", function () {
             if (extMode === 0) {
+                console.log('vis selected')
                 extMode = 2;
                 visible.init()
                 this.classList.add('green-pad')
+                if (document.getElementById("radar-sel").classList.contains('green-pad')) {
+                    document.getElementById("radar-sel").classList.remove('green-pad')
+                }
             }
             if (extMode === 1) {
+                console.log('vis also selected')
                 extMode = 2;
                 airspace.stop()
                 visible.init()
                 document.getElementById("radar-sel").classList.remove('green-pad')
                 this.classList.add('green-pad')
             }
+            
+            if (extMode === 3) {
+                extMode = 2;
+                visible.init()
+                document.getElementById("radar-sel").classList.remove('green-pad')
+                this.classList.add('green-pad')
+            }
+            
+            console.log('vis also also selected')
+            console.log(extMode)
             radiusElmnt.style.display = "none";
+            airportElmnt.style.display = "none";
         });
     document
         .getElementById("radius-selUp")
@@ -377,5 +429,34 @@
                 radiusElmnt.childNodes[3].value--
             }
             radius = parseInt(radiusElmnt.childNodes[3].value)
+        });
+// integrate these two things below with the things above
+// field test it
+    document
+        .getElementById("airport-selSub")
+        .addEventListener("click", function () {
+            if (airportElmnt.childNodes[1].value.length === 4 && geofs.mainAirportList[airportElmnt.childNodes[1].value]) {
+                airportName = airportElmnt.childNodes[1].value
+                airportElmnt.childNodes[1].classList.add('ext-highlighted')
+                extMode = 1;
+                airspace.init()
+            } else {
+                airportElmnt.childNodes[1].classList.add('ext-highlighted2')
+                setTimeout(() => {
+                    airportElmnt.childNodes[1].classList.remove('ext-highlighted2')
+                    airportElmnt.childNodes[1].value = '';
+                }, 3000)
+            }
+        });
+    document
+        .getElementById("airport-selInput")
+        .addEventListener("click", function () {
+            this.value = '';
+            if (this.classList.contains('ext-highlighted')) {
+                this.classList.remove('ext-highlighted');
+            }
+            if (this.classList.contains('ext-highlighted2')) {
+                this.classList.remove('ext-highlighted2');
+            }
         });
 })();
