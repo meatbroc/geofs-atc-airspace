@@ -118,8 +118,8 @@
         b = undefined;
     };
     visible.init = function () {
-        d = Object.keys(multiplayer.visibleUsers).map((key) => key);;
-        e = Object.keys(multiplayer.visibleUsers).map((key) => key);;
+        d = Object.keys(multiplayer.visibleUsers).map((key) => key);
+        e = Object.keys(multiplayer.visibleUsers).map((key) => key);
         function f() {
             if (!d.equals(e)) {
                 action();
@@ -356,9 +356,11 @@
         .getElementById("radar-sel")
         .addEventListener("click", function () {
             if (extMode === 0) {
+                extMode = 3;
                 this.classList.add('green-pad')
             }
             if (extMode === 2) {
+                extMode = 3;
                 visible.stop()
                 document.getElementById("vis-sel").classList.remove('green-pad')
                 this.classList.add('green-pad')
@@ -370,6 +372,7 @@
         .getElementById("vis-sel")
         .addEventListener("click", function () {
             if (extMode === 0) {
+                console.log('vis selected')
                 extMode = 2;
                 visible.init()
                 this.classList.add('green-pad')
@@ -378,12 +381,23 @@
                 }
             }
             if (extMode === 1) {
+                console.log('vis also selected')
                 extMode = 2;
                 airspace.stop()
                 visible.init()
                 document.getElementById("radar-sel").classList.remove('green-pad')
                 this.classList.add('green-pad')
             }
+            
+            if (extMode === 3) {
+                extMode = 2;
+                visible.init()
+                document.getElementById("radar-sel").classList.remove('green-pad')
+                this.classList.add('green-pad')
+            }
+            
+            console.log('vis also also selected')
+            console.log(extMode)
             radiusElmnt.style.display = "none";
             airportElmnt.style.display = "none";
         });
