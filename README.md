@@ -14,7 +14,7 @@ paste the contents of main.user.js from the source folder into a tampermonkey sc
 
 RDR has larger range and will set the radius of your airspace up to 25 km
 
-When planes enter or exit this airspace, a sound and notification is activated
+When planes enter or exit this airspace, a sound and notification are activated
 
 VIS uses which planes are visible to notify you
 
