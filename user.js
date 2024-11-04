@@ -97,8 +97,13 @@
         "https://raw.githubusercontent.com/meatbroc/geofs-atc-airspace/main/sonar.mp3",
     );
     function action() {
-        sonarSound.play();
-        ui.notification.show(`someone entered ${airportName}'s airspace`);
+        if (a.length < b.length) {
+            ui.notification.show(`someone entered ${airportName}'s airspace`);
+            sonarSound.play();
+        } else if (a.length > b.length) {
+            ui.notification.show(`someone left ${airportName}'s airspace`);
+            sonarSound.play();
+        }
     }
     airspace.init = function () {
         a = check(multiplayer.users);
