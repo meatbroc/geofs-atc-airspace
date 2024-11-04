@@ -108,10 +108,10 @@
         }
         if (extMode == 2) {
             if (d.length < e.length) {
-                ui.notification.show(`someone entered ${airportName}'s airspace`);
+                ui.notification.show(`someone entered your airspace`);
                 sonarSound.play();
             } else if (d.length > e.length) {
-                ui.notification.show(`someone left ${airportName}'s airspace`);
+                ui.notification.show(`someone left your airspace`);
                 sonarSound.play();
             }
         }
