@@ -1,6 +1,7 @@
 # geofs-atc-airspace
 
 How to use (without tampermonkey):
+
 open console by pressing ctrl+shift+j, then paste the contents of user.js into the console.
 How to use (with tampermonkey):
 paste the contents of main.user.js from the source folder into a tampermonkey script
