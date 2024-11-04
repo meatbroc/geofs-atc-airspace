@@ -8,7 +8,7 @@ How to use (with tampermonkey):
 
 paste the contents of main.user.js from the source folder into a tampermonkey script
 
-Features:
+# Features:
 
 2 airspace monitoring modes accessible via the AIRSPACE button at the top
 
