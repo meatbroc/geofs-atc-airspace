@@ -70,6 +70,9 @@
     };
     // Hide method from for-in loops
     Object.defineProperty(Array.prototype, "equals", { enumerable: false });
+    Array.prototype.diff = function(arr2) { 
+        return this.filter(x => !arr2.includes(x)); 
+    }
     function check(mObj) {
         let internalArr = [];
         for (const [key, value] of Object.entries(mObj)) {
@@ -96,32 +99,23 @@
     let sonarSound = new Audio(
         "https://raw.githubusercontent.com/meatbroc/geofs-atc-airspace/main/sonar.mp3",
     );
-    function action() {
-        if (extMode == 1) {
-            if (a.length < b.length) {
-                ui.notification.show(`someone entered ${airportName}'s airspace`);
+    function action(arr1, arr2) {
+            if (arr1.length < arr2.length) {
+                const arrDiff = arr2.diff(arr1)
+                ui.notification.show(`${arrDiff} entered your airspace`);
                 sonarSound.play();
-            } else if (a.length > b.length) {
-                ui.notification.show(`someone left ${airportName}'s airspace`);
-                sonarSound.play();
-            }
-        }
-        if (extMode == 2) {
-            if (d.length < e.length) {
-                ui.notification.show(`someone entered your airspace`);
-                sonarSound.play();
-            } else if (d.length > e.length) {
-                ui.notification.show(`someone left your airspace`);
+            } else if (arr1.length > arr2.length) {
+                const arrDiff = arr1.diff(arr2)
+                ui.notification.show(`${arrDiff} left your airspace`);
                 sonarSound.play();
             }
         }
-    }
     airspace.init = function () {
         a = check(multiplayer.users);
         b = check(multiplayer.users);
         function c() {
             if (!a.equals(b)) {
-                action();
+                action(a, b);
             }
             a = b;
             b = check(multiplayer.users);
@@ -138,7 +132,7 @@
         e = Object.keys(multiplayer.visibleUsers).map((key) => key);
         function f() {
             if (!d.equals(e)) {
-                action();
+                (d, e);
             }
             d = e;
             e = Object.keys(multiplayer.visibleUsers).map((key) => key);
@@ -462,3 +456,4 @@
                 this.classList.remove('ext-highlighted2');
             }
         });
+// https://stackoverflow.com/questions/1187518/how-to-get-the-difference-between-two-arrays-in-javascript
