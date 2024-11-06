@@ -102,10 +102,20 @@
     function action(arr1, arr2) {
             if (arr1.length < arr2.length) {
                 const arrDiff = arr2.diff(arr1)
+                arr1.diff(arr2).forEach((element) => {
+                    if (!multiplayer.users[element].isTraffic) {
+                        console.log(multiplayer.users[element.callsign])
+                    }
+                })
                 ui.notification.show(`${arrDiff} entered your airspace`);
                 sonarSound.play();
             } else if (arr1.length > arr2.length) {
                 const arrDiff = arr1.diff(arr2)
+                arr2.diff(arr1).forEach((element) => {
+                    if (!multiplayer.users[element].isTraffic) {
+                        console.log(multiplayer.users[element.callsign])
+                    }
+                })
                 ui.notification.show(`${arrDiff} left your airspace`);
                 sonarSound.play();
             }
@@ -132,7 +142,7 @@
         e = Object.keys(multiplayer.visibleUsers).map((key) => key);
         function f() {
             if (!d.equals(e)) {
-                (d, e);
+                action(d, e);
             }
             d = e;
             e = Object.keys(multiplayer.visibleUsers).map((key) => key);
@@ -457,3 +467,65 @@
             }
         });
 // https://stackoverflow.com/questions/1187518/how-to-get-the-difference-between-two-arrays-in-javascript
+/*
+Array.prototype.equals = function (array) {
+        // if the other array is a falsy value, return
+        if (!array) return false;
+        // if the argument is the same array, we can be sure the contents are same as well
+        if (array === this) return true;
+        // compare lengths - can save a lot of time
+        if (this.length != array.length) return false;
+        for (var i = 0, l = this.length; i < l; i++) {
+            // Check if we have nested arrays
+            if (this[i] instanceof Array && array[i] instanceof Array) {
+                // recurse into the nested arrays
+                if (!this[i].equals(array[i])) return false;
+            } else if (this[i] != array[i]) {
+                // Warning - two different object instances will never be equal: {x:20} != {x:20}
+                return false;
+            }
+        }
+        return true;
+    };
+    // Hide method from for-in loops
+    Object.defineProperty(Array.prototype, "equals", { enumerable: false });
+    Array.prototype.diff = function(arr2) { 
+        return this.filter(x => !arr2.includes(x)); 
+    }
+const skibidi2 = function() {
+
+        a = Object.keys(multiplayer.visibleUsers).map((key) => key);
+        b = Object.keys(multiplayer.visibleUsers).map((key) => key);
+    function c() {
+            if (!a.equals(b)) {
+                action(a, b);
+            }
+            a = b;
+            b = Object.keys(multiplayer.visibleUsers).map((key) => key);
+    }
+    skibidiFanum = setInterval(c, 200);
+}
+
+    Array.prototype.diff = function(arr2) { 
+        return this.filter(x => !arr2.includes(x)); 
+    }
+    function action(arr1, arr2) {
+            if (arr1.length < arr2.length) {
+                const arrDiff = arr2.diff(arr1)
+                arr1.diff(arr2).forEach((element) => {
+                    if (!multiplayer.users[element].isTraffic) {
+                        console.log(multiplayer.users[element.callsign])
+                    }
+                })
+                ui.notification.show(`${arrDiff} entered your airspace`);
+            } else if (arr1.length > arr2.length) {
+                const arrDiff = arr1.diff(arr2)
+                arr2.diff(arr1).forEach((element) => {
+                    if (!multiplayer.users[element].isTraffic) {
+                        console.log(multiplayer.users[element.callsign])
+                    }
+                })
+                ui.notification.show(`${arrDiff} left your airspace`);
+            }
+        }
+*/
