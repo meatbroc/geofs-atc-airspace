@@ -71,7 +71,7 @@
     // Hide method from for-in loops
     Object.defineProperty(Array.prototype, "equals", { enumerable: false });
     Array.prototype.diff = function(arr2) { 
-        return this.filter(x => !arr2.includes(x)); 
+        return this.filter(x => (!multiplayer.users[x].isTraffic) && (!arr2.includes(x))); 
     }
     function check(mObj) {
         let internalArr = [];
@@ -102,7 +102,7 @@
     function action(arr1, arr2) {
             if (arr1.length < arr2.length) {
                 const arrDiff = arr2.diff(arr1)
-                arr1.diff(arr2).forEach((element) => {
+                arr2.diff(arr1).forEach((element) => {
                     if (!multiplayer.users[element].isTraffic) {
                         console.log(multiplayer.users[element.callsign])
                     }
@@ -111,7 +111,7 @@
                 sonarSound.play();
             } else if (arr1.length > arr2.length) {
                 const arrDiff = arr1.diff(arr2)
-                arr2.diff(arr1).forEach((element) => {
+                arr1.diff(arr2).forEach((element) => {
                     if (!multiplayer.users[element].isTraffic) {
                         console.log(multiplayer.users[element.callsign])
                     }
@@ -528,4 +528,16 @@ const skibidi2 = function() {
                 ui.notification.show(`${arrDiff} left your airspace`);
             }
         }
+*/
+/*
+
+    Array.prototype.diff = function(arr2) { 
+        return this.filter(x => (!multiplayer.users[x].isTraffic) && (!arr2.includes(x))); 
+    }
+            d = Object.keys(multiplayer.visibleUsers).map((key) => key);
+function doDatDelay() {
+        e = Object.keys(multiplayer.visibleUsers).map((key) => key);
+        console.log(d.diff(e))
+}
+setTimeout(doDatDelay, 100)
 */
