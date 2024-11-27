@@ -73,6 +73,7 @@
     Array.prototype.diff = function(arr2) { 
         return this.filter(x => (!multiplayer.users[x].isTraffic) && (!arr2.includes(x))); 
     }
+    Object.defineProperty(Array.prototype, "diff", { enumerable: false });
     function check(mObj) {
         let internalArr = [];
         for (const [key, value] of Object.entries(mObj)) {
