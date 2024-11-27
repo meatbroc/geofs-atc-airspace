@@ -71,7 +71,8 @@
     // Hide method from for-in loops
     Object.defineProperty(Array.prototype, "equals", { enumerable: false });
     Array.prototype.diff = function(arr2) { 
-        return this.filter(x => (!multiplayer.users[x].isTraffic) && (!arr2.includes(x))); 
+        const difference = this.filter((x) => !("isTraffic" in multiplayer.users[x]) && (!arr2.includes(x)))
+        return difference; 
     }
     Object.defineProperty(Array.prototype, "diff", { enumerable: false });
     function check(mObj) {
@@ -79,7 +80,7 @@
         for (const [key, value] of Object.entries(mObj)) {
             try {
                 if (value.lastUpdate.co !== undefined && value.lastUpdate.co !== null) {
-                    if (checkUser(value.lastUpdate.co, value.lastUpdate.cs)) {
+                    if (checkUser(value.lastUpdate.co)) {
                         // console.log(key)
                         // usersIn.push(value.lastUpdate.cs)
                         internalArr.push(key);
@@ -103,22 +104,30 @@
     function action(arr1, arr2) {
             if (arr1.length < arr2.length) {
                 const arrDiff = arr2.diff(arr1)
-                arr2.diff(arr1).forEach((element) => {
-                    if (!multiplayer.users[element].isTraffic) {
-                        console.log(multiplayer.users[element.callsign])
+                let diffPlayers = [];
+                arrDiff.forEach((element) => {
+                    if (multiplayer.users[element].callsign !== '' && multiplayer.users[element].callsign !== "Foo") {
+                        diffPlayers.push(multiplayer.users[element])
                     }
                 })
-                ui.notification.show(`${arrDiff} entered your airspace`);
-                sonarSound.play();
+                console.log(diffPlayers.length)
+                if (diffPlayers.length !== 0) {
+                    ui.notification.show(`${diffPlayers} entered your airspace`);
+                    sonarSound.play();
+                }
             } else if (arr1.length > arr2.length) {
                 const arrDiff = arr1.diff(arr2)
+                let diffPlayers = [];
                 arr1.diff(arr2).forEach((element) => {
-                    if (!multiplayer.users[element].isTraffic) {
-                        console.log(multiplayer.users[element.callsign])
+                    if (multiplayer.users[element].callsign !== '' && multiplayer.users[element].callsign !== "Foo") {
+                        diffPlayers.push(multiplayer.users[element])
                     }
                 })
-                ui.notification.show(`${arrDiff} left your airspace`);
-                sonarSound.play();
+                console.log(diffPlayers.length)
+                if (diffPlayers.length !== 0) {
+                    ui.notification.show(`${diffPlayers} left your airspace`);
+                    sonarSound.play();
+                }
             }
         }
     airspace.init = function () {
