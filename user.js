@@ -7,19 +7,16 @@ function checkUser(spotCoordinates) {
 		geofs.mainAirportList[airportName][0],
 		geofs.mainAirportList[airportName][1],
 	);
-	// console.log(`${spotCoordinates[0]} ${spotCoordinates[0]}`)
 
 	if (newRadius < radius) {
 		//point is inside the circle
 		return true;
-		// console.log(`${callsign} is in`)
 	} else if (newRadius > radius) {
 		//point is outside the circle
 		return false;
 	} else {
 		//point is on the circle
 		return true;
-		// console.log(`${callsign} is in`)
 	}
 }
 function distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
@@ -433,8 +430,6 @@ document
 		}
 		radius = parseInt(radiusElmnt.childNodes[3].value);
 	});
-// integrate these two things below with the things above
-// field test it
 document
 	.getElementById("airport-selSub")
 	.addEventListener("click", function () {
