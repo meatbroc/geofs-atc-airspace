@@ -148,10 +148,8 @@
             e = Object.keys(multiplayer.visibleUsers).map((key) => key);
         }
         visible.interval = setInterval(f, 200);
-        console.log('ohio')
     }
     visible.stop = function () {
-        console.log('fanum tax')
         clearInterval(visible.interval);
         d = undefined;
         e = undefined;
@@ -163,8 +161,6 @@
         margin: 0px 10px;
     }
     .ext-autopilot-bar {
-        opacity: 0.5;
-        margin-top: 5px;
         white-space: nowrap;
         display: flex;
         align-items: flex-start;
@@ -305,7 +301,7 @@
                 <div class="ext-control-pad ext-autopilot-pad" id="atc-button" tabindex="0">
                     <div class="control-pad-label transp-pad">AIRSPACE</div>
                     `;
-    const container = document.getElementsByClassName("geofs-ui-top");
+    const container = document.getElementsByClassName("geofs-autopilot-bar");
     container[0].appendChild(controlButton);
     const controlElmnt = document.createElement("div");
     controlElmnt.classList.add("ext-autopilot-controls");
