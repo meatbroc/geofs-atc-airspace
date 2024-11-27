@@ -71,8 +71,7 @@
     // Hide method from for-in loops
     Object.defineProperty(Array.prototype, "equals", { enumerable: false });
     Array.prototype.diff = function(arr2) { 
-        const difference = this.filter((x) => !("isTraffic" in multiplayer.users[x]) && (!arr2.includes(x)))
-        return difference; 
+        return this.filter(x => !arr2.includes(x)).concat(arr2.filter(x => !this.includes(x))); 
     }
     Object.defineProperty(Array.prototype, "diff", { enumerable: false });
     function check(mObj) {
@@ -119,7 +118,9 @@
                 const arrDiff = arr1.diff(arr2)
                 let diffPlayers = [];
                 arr1.diff(arr2).forEach((element) => {
-                    if (multiplayer.users[element].callsign !== '' && multiplayer.users[element].callsign !== "Foo") {
+                    // console.log(arr1.diff(arr2))
+                    // console.log(multiplayer.users[element])
+                    if (multiplayer.users[element].callsign !== undefined) {
                         diffPlayers.push(multiplayer.users[element])
                     }
                 })
@@ -151,8 +152,10 @@
         d = Object.keys(multiplayer.visibleUsers).map((key) => key);
         e = Object.keys(multiplayer.visibleUsers).map((key) => key);
         function f() {
-            if (!d.equals(e)) {
+            if (d.diff(e).length !== 0 && e.diff(d).length !== 0) {
                 action(d, e);
+                console.log(d.diff(e))
+                console.log(e.diff(d))
             }
             d = e;
             e = Object.keys(multiplayer.visibleUsers).map((key) => key);
