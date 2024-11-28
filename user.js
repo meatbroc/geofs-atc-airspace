@@ -79,7 +79,7 @@ function check(mObj) {
 				value.lastUpdate.co !== undefined &&
 				value.lastUpdate.co !== null
 			) {
-				if (checkUser(value.lastUpdate.co, value.lastUpdate.cs)) {
+				if (checkUser(value.lastUpdate.co)) {
 					internalArr.push(key);
 				}
 			}
@@ -97,20 +97,17 @@ let sonarSound = new Audio(
 	"https://raw.githubusercontent.com/meatbroc/geofs-atc-airspace/main/sonar.mp3",
 );
 function action(diffVar, arr1, arr2) {
-	if (arr1.length < arr2.length) {
-		diffVar.forEach((element) => {
-			if (!multiplayer.users[element].isTraffic) {
-				console.log(multiplayer.users[element.callsign]);
+	diffVar = diffVar.map((element) => {
+		if (multiplayer.users[element].hasOwnProperty("isTraffic")) {
+			if (multiplayer.users[element].isTraffic == undefined) {
+				return multiplayer.users[element].callsign;
 			}
-		});
+		}
+	});
+	if (arr1.length < arr2.length) {
 		ui.notification.show(`${diffVar} entered your airspace`);
 		sonarSound.play();
 	} else if (arr1.length > arr2.length) {
-		diffVar.forEach((element) => {
-			if (!multiplayer.users[element].isTraffic) {
-				console.log(multiplayer.users[element.callsign]);
-			}
-		});
 		ui.notification.show(`${diffVar} left your airspace`);
 		sonarSound.play();
 	}
