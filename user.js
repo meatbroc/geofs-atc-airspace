@@ -96,24 +96,22 @@ let e;
 let sonarSound = new Audio(
 	"https://raw.githubusercontent.com/meatbroc/geofs-atc-airspace/main/sonar.mp3",
 );
-function action(arr1, arr2) {
+function action(diffVar, arr1, arr2) {
 	if (arr1.length < arr2.length) {
-		const arrDiff = arr2.diff(arr1);
-		arr2.diff(arr1).forEach((element) => {
+		diffVar.forEach((element) => {
 			if (!multiplayer.users[element].isTraffic) {
 				console.log(multiplayer.users[element.callsign]);
 			}
 		});
-		ui.notification.show(`${arrDiff} entered your airspace`);
+		ui.notification.show(`${diffVar} entered your airspace`);
 		sonarSound.play();
 	} else if (arr1.length > arr2.length) {
-		const arrDiff = arr1.diff(arr2);
-		arr1.diff(arr2).forEach((element) => {
+		diffVar.forEach((element) => {
 			if (!multiplayer.users[element].isTraffic) {
 				console.log(multiplayer.users[element.callsign]);
 			}
 		});
-		ui.notification.show(`${arrDiff} left your airspace`);
+		ui.notification.show(`${diffVar} left your airspace`);
 		sonarSound.play();
 	}
 }
@@ -121,8 +119,10 @@ airspace.init = function () {
 	a = check(multiplayer.users);
 	b = check(multiplayer.users);
 	function c() {
-		if (!a.equals(b)) {
-			action(a, b);
+		const arrDiff = a.diff(b)
+		if (arrDiff.length != 0) {
+			action(arrDiff, a, b);
+			console.log(arrDiff);
 		}
 		a = b;
 		b = check(multiplayer.users);
@@ -135,14 +135,17 @@ airspace.stop = function () {
 	b = undefined;
 };
 visible.init = function () {
-	d = Object.keys(multiplayer.visibleUsers).map((key) => key);
-	e = Object.keys(multiplayer.visibleUsers).map((key) => key);
+	d = Object.keys(multiplayer.visibleUsers)
+	e = Object.keys(multiplayer.visibleUsers)
+	console.log(typeof(Object.keys(multiplayer.visibleUsers)))
 	function f() {
-		if (!d.equals(e)) {
-			action(d, e);
+		const arrDiff = d.diff(e)
+		if (d.diff(e).length != 0) {
+			action(arrDiff, d, e);
+			console.log(d.diff(e));
 		}
 		d = e;
-		e = Object.keys(multiplayer.visibleUsers).map((key) => key);
+		e = Object.keys(multiplayer.visibleUsers)
 	}
 	visible.interval = setInterval(f, 200);
 };
@@ -452,3 +455,5 @@ document
 			this.classList.remove("ext-highlighted2");
 		}
 	});
+// geofs.api.labels.show = false
+// command to hide labels in geofs but continue to display aircraft
