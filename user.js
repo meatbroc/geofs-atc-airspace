@@ -108,6 +108,9 @@ function action(diffVar, arr1, arr2) {
             console.error("Error reading player " + element + "'s data");
         }
 	});
+    if (diffVar.length > 0) {
+        notify()
+    }
     function notify () {
         if (arr1.length < arr2.length) {
             ui.notification.show(`${diffVar} entered your airspace`);
@@ -139,7 +142,6 @@ airspace.stop = function () {
 visible.init = function () {
 	d = Object.keys(multiplayer.visibleUsers)
 	e = Object.keys(multiplayer.visibleUsers)
-	console.log(typeof(Object.keys(multiplayer.visibleUsers)))
 	function f() {
 		const arrDiff = d.diff(e)
 		if (d.diff(e).length != 0) {
@@ -381,7 +383,6 @@ document.getElementById("radar-sel").addEventListener("click", function () {
 });
 document.getElementById("vis-sel").addEventListener("click", function () {
 	if (extMode === 0) {
-		console.log("vis selected");
 		extMode = 2;
 		visible.init();
 		this.classList.add("green-pad");
@@ -392,7 +393,6 @@ document.getElementById("vis-sel").addEventListener("click", function () {
 		}
 	}
 	if (extMode === 1) {
-		console.log("vis also selected");
 		extMode = 2;
 		airspace.stop();
 		visible.init();
@@ -406,9 +406,6 @@ document.getElementById("vis-sel").addEventListener("click", function () {
 		document.getElementById("radar-sel").classList.remove("green-pad");
 		this.classList.add("green-pad");
 	}
-
-	console.log("vis also also selected");
-	console.log(extMode);
 	radiusElmnt.style.display = "none";
 	airportElmnt.style.display = "none";
 });
