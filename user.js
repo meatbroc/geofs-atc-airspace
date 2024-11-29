@@ -98,19 +98,25 @@ let sonarSound = new Audio(
 );
 function action(diffVar, arr1, arr2) {
 	diffVar = diffVar.map((element) => {
-		if (multiplayer.users[element].hasOwnProperty("isTraffic")) {
-			if (multiplayer.users[element].isTraffic == undefined) {
-				return multiplayer.users[element].callsign;
-			}
-		}
+        try {
+            if (multiplayer.users[element]) {
+                if (multiplayer.users[element].isTraffic == undefined) {
+                    return multiplayer.users[element].callsign;
+                }
+            }
+        } catch (error) {
+            console.error("Error reading player " + element + "'s data");
+        }
 	});
-	if (arr1.length < arr2.length) {
-		ui.notification.show(`${diffVar} entered your airspace`);
-		sonarSound.play();
-	} else if (arr1.length > arr2.length) {
-		ui.notification.show(`${diffVar} left your airspace`);
-		sonarSound.play();
-	}
+    function notify () {
+        if (arr1.length < arr2.length) {
+            ui.notification.show(`${diffVar} entered your airspace`);
+            sonarSound.play();
+        } else if (arr1.length > arr2.length) {
+            ui.notification.show(`${diffVar} left your airspace`);
+            sonarSound.play();
+        }
+    }
 }
 airspace.init = function () {
 	a = check(multiplayer.users);
@@ -119,7 +125,6 @@ airspace.init = function () {
 		const arrDiff = a.diff(b)
 		if (arrDiff.length != 0) {
 			action(arrDiff, a, b);
-			console.log(arrDiff);
 		}
 		a = b;
 		b = check(multiplayer.users);
@@ -139,7 +144,6 @@ visible.init = function () {
 		const arrDiff = d.diff(e)
 		if (d.diff(e).length != 0) {
 			action(arrDiff, d, e);
-			console.log(d.diff(e));
 		}
 		d = e;
 		e = Object.keys(multiplayer.visibleUsers)
