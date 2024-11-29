@@ -6,11 +6,15 @@ open console by pressing ctrl+shift+j, then paste the contents of user.js into t
 
 paste the contents of main.user.js from the source folder into a tampermonkey script
 
+ctrl+s to save
+
 # Features:
 
 2 airspace monitoring modes accessible via the AIRSPACE button at the top
 
 RDR has larger range and will set the radius of your airspace up to 25 km
+
+RDR creates an invisible circle centered around your airport of choice that senses if a plane enters or exits it regardless of altitude
 
 Set your radius and your airport to begin monitoring
 
