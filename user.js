@@ -96,27 +96,39 @@ let e;
 let sonarSound = new Audio(
 	"https://raw.githubusercontent.com/meatbroc/geofs-atc-airspace/main/sonar.mp3",
 );
+function createHaring (b) {
+                k = $('<div class="geofs-haring"><div class="geofs-content"><p>' + b + '</p></div></div></div></div>'),
+                $('body').append(k);
+            setTimeout(function () {
+                k.remove()
+            }, 3000)
+        }
+
 function action(diffVar, arr1, arr2) {
 	diffVar = diffVar.map((element) => {
-        try {
-            if (multiplayer.users[element]) {
-                if (multiplayer.users[element].isTraffic == undefined) {
-                    return multiplayer.users[element].callsign;
-                }
-            }
-        } catch (error) {
-            console.error("Error reading player " + element + "'s data");
-        }
+	try {
+	    if (multiplayer.users[element]) {
+		if (multiplayer.users[element].isTraffic == undefined) {
+		    return multiplayer.users[element].callsign;
+		}
+	    }
+	} catch (error) {
+	    console.error("Error reading player " + element + "'s data");
+	}
 	});
-    if (diffVar.length > 0) {
-        notify()
-    }
+	diffVar = diffVar.filter(function( element ) {
+   		return element !== undefined;
+	});
+	if (diffVar.length > 0) {
+		notify()
+		console.log(diffVar)
+	}
     function notify () {
         if (arr1.length < arr2.length) {
-            ui.notification.show(`${diffVar} entered your airspace`);
+            createHaring(`${diffVar} entered your airspace`);
             sonarSound.play();
         } else if (arr1.length > arr2.length) {
-            ui.notification.show(`${diffVar} left your airspace`);
+            createHaring(`${diffVar} left your airspace`);
             sonarSound.play();
         }
     }
