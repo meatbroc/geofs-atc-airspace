@@ -111,13 +111,14 @@
         	"https://raw.githubusercontent.com/meatbroc/geofs-atc-airspace/main/sonar.mp3",
         );
         function createHaring (b) {
-                        k = $('<div class="geofs-haring"><div class="geofs-content"><p>' + b + '</p></div></div></div></div>'),
-                        $('body').append(k);
-                    setTimeout(function () {
-                        k.remove()
-                    }, 3000)
-                }
-        
+            const myHaring = document.createElement('div')
+            myHaring.classList.add('geofs-haring')
+            myHaring.innerHTML = `<div class="geofs-content"><p>${b}</p></div></div></div>`;
+            document.body.appendChild(myHaring)
+            setTimeout(function () {
+                myHaring.remove()
+            }, 3000)
+        }
         function action(diffVar, arr1, arr2) {
         	diffVar = diffVar.map((element) => {
         	try {
