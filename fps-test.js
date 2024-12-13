@@ -1,119 +1,142 @@
-// Create the main fpsBox div
+// Create the main FPS box
 const fpsBox = document.createElement('div');
-
-// Style the main fpsBox
 fpsBox.style.backgroundColor = 'rgb(140, 138, 148)';
 fpsBox.style.borderColor = 'rgb(192, 192, 192)';
 fpsBox.style.borderStyle = 'ridge';
 fpsBox.style.borderWidth = '5px';
-fpsBox.style.height = '400px'; // Set a fixed height for the scrollable box
+fpsBox.style.height = '400px'; 
 fpsBox.style.width = '800px';
 fpsBox.style.position = 'absolute';
 fpsBox.style.zIndex = 999;
-fpsBox.style.overflow = 'auto'; // Enable scrolling when content overflows
+fpsBox.style.overflow = 'auto'; 
 fpsBox.id = 'fps-box';
 
-// Function to create columns
-function createColumn(columnNumber) {
-    const column = document.createElement('div');
-    column.style.flex = '1'; // Each column takes equal space
-    column.style.padding = '10px'; // Padding inside each column
-    column.style.boxSizing = 'border-box'; // Include padding in width
-    column.style.border = '1px solid #ccc'; // Border for each column
-    column.style.backgroundColor = '#e0e0e0'; // Light gray background for columns
-    column.style.textAlign = 'center'; // Center the text
-    column.style.position = 'relative'; // Position relative for absolute items
+// Create the title for the FPS box
+const fpsBoxTitle = document.createElement('div');
+fpsBoxTitle.textContent = "Flight Progress Strips";
+fpsBoxTitle.style.cursor = 'move'; 
+fpsBoxTitle.style.backgroundColor = '#b0b0b0'; 
+fpsBoxTitle.style.padding = '10px';
+fpsBoxTitle.style.textAlign = 'center';
+fpsBoxTitle.style.fontWeight = 'bold';
 
-    // Create a title for each column
-    const title = document.createElement('h3');
-    title.textContent = `Column ${columnNumber}`;
+// Append title to the FPS box
+fpsBox.appendChild(fpsBoxTitle);
+
+// Create a divider line styled to match the fpsBox border
+const divider = document.createElement('div');
+divider.style.height = '5px'; // Height of the line to match border width
+divider.style.borderTop = '5px ridge rgb(192, 192, 192)'; // Match the border style
+divider.style.margin = '0'; // Remove default margin
+divider.style.width = '100%'; // Full width of the FPS box
+fpsBox.appendChild(divider); // Append the line after the title
+
+// Function to create a column
+function createColumn(text) {
+    const column = document.createElement('div');
+    column.style.flex = '1'; 
+    column.style.padding = '10px'; 
+    column.style.boxSizing = 'border-box'; 
+    column.style.border = '1px solid #ccc'; 
+    column.style.backgroundColor = '#e0e0e0'; 
+    column.style.textAlign = 'center'; 
+    column.style.position = 'relative'; 
+
+    const title = document.createElement('div');
+    title.textContent = text;
+    title.style.top = '0px';
+    title.style.color = '#5b7b9f';
     column.appendChild(title);
 
-    // Create a button to add a new row specifically for this column
     const addRowButton = document.createElement('button');
-    addRowButton.textContent = `Add Row ${columnNumber}`;
+    addRowButton.textContent = `+`;
+    addRowButton.style.marginTop = '10px'; 
     addRowButton.onclick = function() {
-        appendNewRow(column); // Append a new row under this column
+        appendNewRow(column); 
     };
     column.appendChild(addRowButton);
 
-    // Create a container for rows within the column
     const rowContainer = document.createElement('div');
-    rowContainer.style.marginTop = '20px'; // Add some space above rows
-    rowContainer.style.height = '300px'; // Fixed height for row container
-    rowContainer.style.overflowY = 'auto'; // Enable vertical scrolling if rows exceed height
-    column.appendChild(rowContainer); // Append row container to column
+    rowContainer.style.marginTop = '20px'; 
+    rowContainer.style.height = '300px'; 
+    rowContainer.style.overflowY = 'auto'; 
+    column.appendChild(rowContainer); 
 
-    // Store the row container for later use
     column.rowContainer = rowContainer;
 
-    return column; // Return the created column
+    return column; 
 }
 
-// Create initial columns
+// Create the columns container
 const columnsContainer = document.createElement('div');
-columnsContainer.style.display = 'flex'; // Use Flexbox to arrange columns
+columnsContainer.style.display = 'flex'; 
 fpsBox.appendChild(columnsContainer);
 
-const columnCount = 3; // Number of columns
-for (let i = 1; i <= columnCount; i++) {
-    columnsContainer.appendChild(createColumn(i));
-}
+// Append columns
+columnsContainer.appendChild(createColumn('Arrivals'));
+columnsContainer.appendChild(createColumn('Departures'));
+columnsContainer.appendChild(createColumn('Ground'));
 
 // Function to create a row
 function createRow() {
     const row = document.createElement('div');
-    row.style.display = 'flex'; // Use Flexbox for horizontal layout of the row
-    row.style.padding = '10px'; // Padding inside each row
-    row.style.boxSizing = 'border-box'; // Include padding in width
-    row.style.border = '1px solid #ccc'; // Border for each row
-    row.style.backgroundColor = '#e0e0e0'; // Light background for rows
-    row.style.marginBottom = '10px'; // Space between rows
-    row.style.position = 'relative'; // Make relative to position button
-    row.style.width = '100%'; // Make row take full width of column
+    row.style.display = 'flex'; 
+    row.style.padding = '10px'; 
+    row.style.boxSizing = 'border-box'; 
+    row.style.border = '1px solid #ccc'; 
+    row.style.backgroundColor = '#e0e0e0'; 
+    row.style.marginBottom = '10px'; 
+    row.style.position = 'relative'; 
+    row.style.width = '100%'; 
 
-    // Create an input field for the row number
     const input = document.createElement('input');
     input.type = 'text';
-    input.placeholder = 'Row Name'; // Placeholder text
-    input.style.border = 'none'; // No border
-    input.style.borderBottom = '2px solid #a0a0a0'; // Darker bottom border
-    input.style.width = '100%'; // Full width of the row
-    input.style.outline = 'none'; // Remove outline on focus
-    input.style.fontSize = '16px'; // Font size
-    input.style.backgroundColor = 'transparent'; // Transparent background
+    input.placeholder = 'Row Name'; 
+    input.style.border = 'none'; 
+    input.style.borderBottom = '2px solid #a0a0a0'; 
+    input.style.width = '80%'; 
+    input.style.outline = 'none'; 
+    input.style.fontSize = '16px'; 
+    input.style.backgroundColor = 'transparent'; 
+    input.style.marginRight = '10px'; 
 
-    row.appendChild(input); // Append the input field to the row
+    row.appendChild(input); 
 
-    // Create a button to remove the row
     const removeButton = document.createElement('button');
     removeButton.textContent = `x`;
     removeButton.onclick = function() {
-        row.remove(); // Remove the row from the DOM
+        row.remove(); 
     };
 
-    // Style the button to position it at the top right corner
     removeButton.style.position = 'absolute';
     removeButton.style.top = '10px';
     removeButton.style.right = '10px';
+    removeButton.style.backgroundColor = '#ff4c4c'; 
+    removeButton.style.color = '#ffffff'; 
+    removeButton.style.border = 'none'; 
+    removeButton.style.padding = '5px 10px'; 
+    removeButton.style.cursor = 'pointer'; 
+    removeButton.style.borderRadius = '5px'; 
 
     row.appendChild(removeButton);
 
-    return row; // Return the created row
+    return row; 
 }
 
-// Function to append a new row to a specific column
+// Function to append a new row to the selected column
 function appendNewRow(column) {
-    column.rowContainer.appendChild(createRow()); // Append new row to the column's row container
+    column.rowContainer.appendChild(createRow()); 
 }
 
-// Append the fpsBox to the body
+// Append FPS box to the body
 document.body.appendChild(fpsBox);
 
-// Drag functionality
+// Function to make the FPS box draggable
 function dragElement(elmnt) {
-    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-    elmnt.onmousedown = dragMouseDown;
+    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    const title = elmnt.firstChild; 
+
+    title.onmousedown = dragMouseDown;
 
     function dragMouseDown(e) {
         e = e || window.event;
@@ -141,5 +164,5 @@ function dragElement(elmnt) {
     }
 }
 
-// Initialize dragging on the fpsBox
+// Initialize dragging functionality
 dragElement(fpsBox);
